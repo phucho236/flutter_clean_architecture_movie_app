@@ -22,12 +22,20 @@ class MoviesPage extends StatelessWidget {
             builder: (context, state) {
               if (state is DataLoadedState<List<GenreMovies>>) {
                 final data = state.data;
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SingleChildScrollView(
-                      child: Column(
-                    children: [for (int i = 0; i < data.length; i++) GenreMoviesScrollableList(genreMovies: data[i])],
-                  )),
+                return Column(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SingleChildScrollView(
+                            child: Column(
+                          children: [
+                            for (int i = 0; i < data.length; i++) GenreMoviesScrollableList(genreMovies: data[i])
+                          ],
+                        )),
+                      ),
+                    )
+                  ],
                 );
               }
               // if (state is)
