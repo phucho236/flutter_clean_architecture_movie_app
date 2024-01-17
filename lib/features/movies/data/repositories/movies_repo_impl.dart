@@ -13,6 +13,7 @@ class MoviesRepoImpl implements MoviesRepo {
 
   MoviesRepoImpl(this.moviesRemoteDataSource, this.generator);
 
+  @override
   Future<Either<Failure, List<GenreMovies>>> getAll() async {
     try {
       final result = await moviesRemoteDataSource.getAll();

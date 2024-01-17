@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MoviesSearchRoot extends StatelessWidget {
+  static const String route = '/register';
+
   const MoviesSearchRoot({Key? key}) : super(key: key);
 
   @override

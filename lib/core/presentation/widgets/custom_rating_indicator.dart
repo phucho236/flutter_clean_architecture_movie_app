@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class CustomRatingIndicator extends StatelessWidget {
-  const CustomRatingIndicator(
-      {Key? key, required this.rating, required this.size})
-      : super(key: key);
+  const CustomRatingIndicator({Key? key, required this.rating, required this.size}) : super(key: key);
   final num rating;
   final double size;
 
@@ -12,7 +10,7 @@ class CustomRatingIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return RatingBarIndicator(
       rating: rating.toDouble(),
-      itemBuilder: (context, index) => Icon(
+      itemBuilder: (context, index) => const Icon(
         Icons.star,
         color: Colors.amber,
       ),

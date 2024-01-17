@@ -7,10 +7,7 @@ class Retry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        Text('Something happen'),
-        TextButton(onPressed: onRetry, child: Text('Retry'))
-      ],
+      children: [const Text('Something happen'), TextButton(onPressed: onRetry, child: const Text('Retry'))],
     );
   }
 }

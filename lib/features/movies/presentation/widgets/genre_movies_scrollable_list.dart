@@ -3,8 +3,7 @@ import 'package:clean_arch_movie_app/features/movies/presentation/widgets/movie_
 import 'package:flutter/material.dart';
 
 class GenreMoviesScrollableList extends StatelessWidget {
-  const GenreMoviesScrollableList({Key? key, required this.genreMovies})
-      : super(key: key);
+  const GenreMoviesScrollableList({Key? key, required this.genreMovies}) : super(key: key);
   final GenreMovies genreMovies;
 
   @override
@@ -14,8 +13,8 @@ class GenreMoviesScrollableList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(genreMovies.genre.name, style: TextStyle(fontSize: 20)),
-          SizedBox(height: 10),
+          Text(genreMovies.genre.name, style: const TextStyle(fontSize: 20)),
+          const SizedBox(height: 10),
           SizedBox(
             height: 280,
             child: ListView.separated(
@@ -27,7 +26,7 @@ class GenreMoviesScrollableList extends StatelessWidget {
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
-                return SizedBox(
+                return const SizedBox(
                   width: 10,
                 );
               },

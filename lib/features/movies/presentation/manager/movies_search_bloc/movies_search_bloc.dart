@@ -1,9 +1,9 @@
-import 'package:bloc/bloc.dart';
 import 'package:clean_arch_movie_app/core/base_bloc/base_bloc.dart';
 import 'package:clean_arch_movie_app/core/base_bloc/base_event.dart';
 import 'package:clean_arch_movie_app/core/base_bloc/base_state.dart';
 import 'package:clean_arch_movie_app/features/movies/domain/entities/movie.dart';
 import 'package:clean_arch_movie_app/features/movies/domain/use_cases/search_movies_use_case.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 const _duration = Duration(milliseconds: 700);

@@ -9,10 +9,21 @@ class CustomMaterialApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      builder: (_, widgets) => SafeArea(child: widgets!),
+      builder: (_, widgets) => Padding(
+        padding: EdgeInsets.only(top: MediaQuery.of(_).viewPadding.top),
+        child: widgets!,
+      ),
       title: 'Flutter Demo',
       theme: AppTheme.lightTheme,
       routes: AppRoutes.routes,
+      onUnknownRoute: (RouteSettings setting) {
+        return MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(title: const Text("Coming soon")),
+            body: const Center(child: Text("Building in proccess")),
+          ),
+        );
+      },
     );
   }
 }

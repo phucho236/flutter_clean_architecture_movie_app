@@ -1,15 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MyBlocObserver extends BlocObserver {
   @override
   void onEvent(Bloc bloc, Object? event) {
-    print('bloc - onEvent: ${bloc.runtimeType} - $event');
+    log('bloc - onEvent: ${bloc.runtimeType} - $event');
     super.onEvent(bloc, event);
   }
 
   @override
   void onTransition(Bloc bloc, Transition transition) {
-    print('bloc - onTransition: ${bloc.runtimeType} - $transition');
+    log('bloc - onTransition: ${bloc.runtimeType} - $transition');
     super.onTransition(bloc, transition);
   }
 
@@ -19,7 +21,7 @@ class MyBlocObserver extends BlocObserver {
     Object error,
     StackTrace stackTrace,
   ) {
-    print('bloc - onError: ${bloc.runtimeType} - $error');
+    log('bloc - onError: ${bloc.runtimeType} - $error');
     super.onError(bloc, error, stackTrace);
   }
 }
