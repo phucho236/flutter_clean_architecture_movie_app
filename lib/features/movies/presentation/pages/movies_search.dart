@@ -1,5 +1,8 @@
+import 'package:clean_arch_movie_app/core/base_bloc/base_event.dart';
+import 'package:clean_arch_movie_app/core/base_bloc/base_state.dart';
 import 'package:clean_arch_movie_app/core/injection.dart';
 import 'package:clean_arch_movie_app/core/presentation/widgets/retry.dart';
+import 'package:clean_arch_movie_app/features/movies/domain/entities/movie.dart';
 import 'package:clean_arch_movie_app/features/movies/presentation/manager/movies_search_bloc/movies_search_bloc.dart';
 import 'package:clean_arch_movie_app/features/movies/presentation/widgets/movie_search_card.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +14,7 @@ class MoviesSearchRoot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        child: MoviesSearch(),
-        create: (context) => Injection.getIt.get<MoviesSearchBloc>()
-          ..add(TextChanged(text: '')));
+        child: MoviesSearch(), create: (context) => Injection.getIt.get<MoviesSearchBloc>()..add(OnChange<String>('')));
   }
 }
 
@@ -31,42 +32,36 @@ class MoviesSearch extends StatelessWidget {
                   onChanged: (inputValue) {
                     if (lastInputValue != inputValue) {
                       lastInputValue = inputValue;
-                      context
-                          .read<MoviesSearchBloc>()
-                          .add(TextChanged(text: inputValue));
+                      context.read<MoviesSearchBloc>().add(OnChange<String>(inputValue));
                     }
                   },
-                  decoration: InputDecoration(hintText: 'Search here ..'))),
+                  decoration: const InputDecoration(hintText: 'Search here ..'))),
 
           Expanded(
-            child: BlocBuilder<MoviesSearchBloc, MoviesSearchState>(
+            child: BlocBuilder<MoviesSearchBloc, BaseState>(
               builder: (_, state) {
-                if (state is MoviesSearchStateEmpty) {
-                  return Center(
-                    child: Text('Not found any result ..'),
-                  );
-                }
-/*
-                if (state is MoviesSearchInitial) {
-                  return Center(
+                if (state is InitialState) {
+                  return const Center(
                     child: Text('Start search ..'),
                   );
                 }
-*/
 
-                if (state is SearchStateError) {
+                if (state is ErrorState) {
                   return Center(
                     child: Retry(
                       onRetry: () {
-                        context
-                            .read<MoviesSearchBloc>()
-                            .add(TextChanged(text: ''));
+                        context.read<MoviesSearchBloc>().add(OnChange<String>(''));
                       },
                     ),
                   );
                 }
-                if (state is SearchStateSuccess) {
-                  final items = state.items;
+                if (state is DataLoadedState<List<Movie>>) {
+                  if (state.data.isEmpty) {
+                    return const Center(
+                      child: Text('Not found any result ..'),
+                    );
+                  }
+                  final items = state.data;
                   return ListView.separated(
                     itemCount: items.length,
                     itemBuilder: (BuildContext context, int index) {
@@ -74,13 +69,13 @@ class MoviesSearch extends StatelessWidget {
                       return MovieSearchCard(movie: item);
                     },
                     separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(
+                      return const SizedBox(
                         height: 20,
                       );
                     },
                   );
                 }
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               },

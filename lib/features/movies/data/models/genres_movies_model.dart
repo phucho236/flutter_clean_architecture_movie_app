@@ -4,6 +4,5 @@ import 'package:clean_arch_movie_app/features/movies/data/models/movie_model.dar
 class GenreMoviesModel {
   final GenreModel genre;
   final List<MovieModel> movies;
-
   GenreMoviesModel({required this.genre, required this.movies});
 }
