@@ -1,4 +1,7 @@
-class Failure {}
+class Failure {
+  Failure({this.msg});
+  String? msg;
+}
 
 class NetworkFailure extends Failure {}
 

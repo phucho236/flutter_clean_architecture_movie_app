@@ -40,3 +40,11 @@ abstract class BaseBloc extends Bloc<BaseEvent, BaseState> {
     }
   }
 }
+
+class ValidButtonBloc extends BaseBloc {
+  ValidButtonBloc() : super(InitialState()) {
+    onLoad<OnChange<bool>>((event, emit) {
+      emit(DataLoadedState(event.value));
+    });
+  }
+}

@@ -15,7 +15,7 @@ class MoviesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => Injection.getIt.get<MoviesBloc>()..add(OnLoadMovies()),
+      create: (_) => getIt.get<MoviesBloc>()..add(OnLoadMovies()),
       child: Scaffold(
         appBar: const SearchAppBar(),
         body: Builder(builder: (context) {
@@ -39,12 +39,11 @@ class MoviesPage extends StatelessWidget {
                   ],
                 );
               }
-              // if (state is)
+              if (state is ErrorState) return Retry(onRetry: () {});
 
               return const Center(
                 child: CircularProgressIndicator(),
               );
-              if (state is ErrorState) return Retry(onRetry: () {});
             },
           );
         }),

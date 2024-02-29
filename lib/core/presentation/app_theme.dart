@@ -4,16 +4,17 @@ class AppTheme {
   static get lightTheme => ThemeData(
         //Theme of text field
         inputDecorationTheme: const InputDecorationTheme(
-            hintStyle: TextStyle(color: Colors.blue),
-            border: InputBorder.none,
+          // hintStyle: TextStyle(color: Colors.black),
+          border: InputBorder.none,
 
-            //height of text field
-            contentPadding: EdgeInsets.all(15)),
+          //height of text field
+          contentPadding: EdgeInsets.all(15),
+        ),
         //
         textTheme: const TextTheme(
           bodySmall: TextStyle(color: Colors.white),
           //Default of Text() if you dont create any value flutter will use this
-          bodyMedium: TextStyle(height: 1, color: Colors.green),
+          bodyMedium: TextStyle(height: 1, color: Colors.black),
           //
           bodyLarge: TextStyle(color: Colors.white),
           displaySmall: TextStyle(color: Colors.white),

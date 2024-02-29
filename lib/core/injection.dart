@@ -1,4 +1,8 @@
 import 'package:clean_arch_movie_app/core/configured_dio.dart';
+import 'package:clean_arch_movie_app/features/auth/data/data_sources/auth_data_source.dart';
+import 'package:clean_arch_movie_app/features/auth/data/repositories/auth_repo_impl.dart';
+import 'package:clean_arch_movie_app/features/auth/domain/use_cases/login_use_case.dart';
+import 'package:clean_arch_movie_app/features/auth/presentation/manager/auth_bloc/auth_bloc.dart';
 import 'package:clean_arch_movie_app/features/movies/data/data_sources/movies_remote_data_source.dart';
 import 'package:clean_arch_movie_app/features/movies/data/movies_genres_generator.dart';
 import 'package:clean_arch_movie_app/features/movies/data/repositories/movies_repo_impl.dart';
@@ -9,9 +13,9 @@ import 'package:clean_arch_movie_app/features/movies/presentation/manager/movies
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
-class Injection {
-  static final getIt = GetIt.instance;
+final getIt = GetIt.instance;
 
+class Injection {
   static setup() async {
     getIt.registerSingleton<Dio>(
       ConfiguredDio().dio,
@@ -20,12 +24,19 @@ class Injection {
     getIt.registerSingleton<MoviesRepoImpl>(
       MoviesRepoImpl(MoviesRemoteDataSource(dio), GenreMoviesGenerator()),
     );
-
     getIt.registerFactory<MoviesBloc>(() => MoviesBloc(
           GetMoviesUseCase(getIt.get<MoviesRepoImpl>()),
         ));
     getIt.registerFactory<MoviesSearchBloc>(() => MoviesSearchBloc(
           SearchMoviesUseCase(getIt.get<MoviesRepoImpl>()),
         ));
+    getIt.registerSingleton<AuthRepoImpl>(
+      AuthRepoImpl(AuthRemoteDataSource(dio)),
+    );
+    getIt.registerFactory<AuthBloc>(
+      () => AuthBloc(
+        AuthUseCase(getIt.get<AuthRepoImpl>()),
+      ),
+    );
   }
 }

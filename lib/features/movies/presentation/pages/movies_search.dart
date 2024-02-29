@@ -16,12 +16,14 @@ class MoviesSearchRoot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        child: MoviesSearch(), create: (context) => Injection.getIt.get<MoviesSearchBloc>()..add(OnChange<String>('')));
+        child: MoviesSearch(), create: (context) => getIt.get<MoviesSearchBloc>()..add(OnChange<String>('')));
   }
 }
 
+// ignore: must_be_immutable
 class MoviesSearch extends StatelessWidget {
-  String? lastInputValue;
+  MoviesSearch({Key? key}) : super(key: key);
+  String? _lastInputValue;
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +34,8 @@ class MoviesSearch extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                   onChanged: (inputValue) {
-                    if (lastInputValue != inputValue) {
-                      lastInputValue = inputValue;
+                    if (_lastInputValue != inputValue) {
+                      _lastInputValue = inputValue;
                       context.read<MoviesSearchBloc>().add(OnChange<String>(inputValue));
                     }
                   },

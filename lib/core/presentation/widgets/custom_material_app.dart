@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:clean_arch_movie_app/core/presentation/app_config.dart';
 import 'package:clean_arch_movie_app/core/presentation/app_routes.dart';
 import 'package:clean_arch_movie_app/core/presentation/app_theme.dart';
@@ -10,10 +11,8 @@ class CustomMaterialApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      builder: (_, widget) => Padding(
-        padding: EdgeInsets.only(top: MediaQuery.of(_).viewPadding.top),
-        child: widget!,
-      ),
+      builder: BotToastInit(),
+      navigatorObservers: [BotToastNavigatorObserver()],
       title: AppConfig().appName,
       theme: AppTheme.lightTheme,
       routes: AppRoutes.routes,
