@@ -1,3 +1,4 @@
+import 'package:clean_arch_movie_app/core/presentation/app_config.dart';
 import 'package:clean_arch_movie_app/core/presentation/app_routes.dart';
 import 'package:clean_arch_movie_app/core/presentation/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,11 @@ class CustomMaterialApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      builder: (_, widgets) => Padding(
+      builder: (_, widget) => Padding(
         padding: EdgeInsets.only(top: MediaQuery.of(_).viewPadding.top),
-        child: widgets!,
+        child: widget!,
       ),
-      title: 'Flutter Demo',
+      title: AppConfig().appName,
       theme: AppTheme.lightTheme,
       routes: AppRoutes.routes,
       onUnknownRoute: (RouteSettings setting) {

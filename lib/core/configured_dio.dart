@@ -1,7 +1,8 @@
+import 'package:clean_arch_movie_app/core/presentation/app_config.dart';
 import 'package:dio/dio.dart';
 
 class ConfiguredDio {
-  static const String _host = 'https://wookie.codesubmit.io/';
+  static  final String _host = AppConfig().apiUrl;
   late final Dio dio;
 
   ConfiguredDio() {

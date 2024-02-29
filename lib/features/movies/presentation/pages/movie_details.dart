@@ -4,7 +4,7 @@ import 'package:clean_arch_movie_app/features/movies/domain/entities/movie.dart'
 import 'package:flutter/material.dart';
 
 class MovieDetails extends StatelessWidget {
-  static const String route = '/login';
+  static const String route = '/MovieDetails';
 
   const MovieDetails({Key? key}) : super(key: key);
 

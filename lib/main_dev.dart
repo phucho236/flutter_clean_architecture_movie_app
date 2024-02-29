@@ -9,12 +9,13 @@ void main() {
   AppConfig.init(
     apiUrl: 'https://wookie.codesubmit.io/',
     appName: "",
-    flavorName: AppFlavor.PROD,
+    flavorName: AppFlavor.DEV,
     resourceIcon: "",
     secondsTimeout: 30,
     socketUrl: "",
   );
   Injection.setup();
   Bloc.observer = MyBlocObserver();
+
   runApp(const CustomMaterialApp());
 }
