@@ -1,74 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class AppMessage {
-  static showToastMessage(BuildContext context, String? title, {int seconds = 2}) {
-    if (title == null) return;
-    final FToast fToast = FToast();
-    fToast.init(context);
-    Future.delayed(
-      Duration.zero,
-      () async {
-        fToast.showToast(
-          gravity: ToastGravity.TOP,
-          child: ToastMessage(title: title),
-          toastDuration: Duration(seconds: seconds),
-        );
+  static showToastMessage(String? message, {int seconds = 2}) {
+    if (message == null) return;
+    BotToast.showCustomNotification(
+      animationDuration: const Duration(milliseconds: 200),
+      animationReverseDuration: const Duration(milliseconds: 200),
+      duration: Duration(seconds: seconds),
+      toastBuilder: (cancel) {
+        return ToastMessage(message: message);
       },
     );
   }
 
   static showNotificationMessage({NotificationModel? model, NotificationCallback? callback}) {
     BotToast.showCustomNotification(
-        animationDuration: const Duration(milliseconds: 200),
-        animationReverseDuration: const Duration(milliseconds: 200),
-        duration: const Duration(seconds: 5),
-        toastBuilder: (cancel) {
-          return NotificationMessage(
-            model: model,
-            callback: (model) {
-              cancel();
-              callback!(model);
-            },
-          );
-        });
+      animationDuration: const Duration(milliseconds: 200),
+      animationReverseDuration: const Duration(milliseconds: 200),
+      duration: const Duration(seconds: 5),
+      toastBuilder: (cancel) {
+        return NotificationMessage(
+          model: model,
+          callback: (model) {
+            cancel();
+            callback!(model);
+          },
+        );
+      },
+    );
   }
 }
 
 class ToastMessage extends StatelessWidget {
-  const ToastMessage({this.title});
-  final String? title;
+  const ToastMessage({this.message, Key? key}) : super(key: key);
+  final String? message;
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 50),
-      child: Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
-        decoration: BoxDecoration(
-          color: Colors.amber,
-          borderRadius: BorderRadius.circular(12),
-          //  boxShadow: [AppTheme.defaultBoxShadow]
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              clipBehavior: Clip.hardEdge,
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: Colors.white,
-              ),
-              child: Text("Icon here"),
+    return Container(
+      height: 50,
+      margin: const EdgeInsets.symmetric(horizontal: 15),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.amber,
+        borderRadius: BorderRadius.circular(12),
+        //  boxShadow: [AppTheme.defaultBoxShadow]
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            clipBehavior: Clip.hardEdge,
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: Colors.white,
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(title!, style: const TextStyle(color: Colors.white, fontSize: 16)),
-            ),
-          ],
-        ),
+            child: const Text("Icon here"),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(message!, style: const TextStyle(color: Colors.white, fontSize: 16)),
+          ),
+        ],
       ),
     );
   }

@@ -1,4 +1,4 @@
-import 'package:clean_arch_movie_app/core/failures/failures.dart';
+import 'package:clean_arch_movie_app/core/err/failures.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class BaseState extends Equatable {}

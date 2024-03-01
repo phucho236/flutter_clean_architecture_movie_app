@@ -1,4 +1,4 @@
-import 'package:clean_arch_movie_app/core/failures/failures.dart';
+import 'package:clean_arch_movie_app/core/err/failures.dart';
 import 'package:clean_arch_movie_app/core/use_case/use_case.dart';
 import 'package:clean_arch_movie_app/features/auth/domain/entities/login.dart';
 import 'package:clean_arch_movie_app/features/auth/domain/repositories/auth_repo.dart';

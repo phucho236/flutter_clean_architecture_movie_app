@@ -9,7 +9,6 @@ import 'package:clean_arch_movie_app/features/movies/presentation/pages/movies_p
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
   static String route = "/";
@@ -34,20 +33,21 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: BlocConsumer<AuthBloc, BaseState>(
         listener: (context, state) {
-          if (state is ErrorState) {
-            AppMessage.showToastMessage(context, state.failure?.msg ?? "");
-            AppMessage.showNotificationMessage(
-                model: NotificationModel(
-                    title: "ABCD",
-                    body: "body",
-                    data: NotificationData(
-                        notificationId: "1",
-                        calendarId: "1",
-                        communicationId: "1",
-                        notificationType: "1",
-                        remindId: "1",
-                        referalCode: "1")),
-                callback: (value) {});
+          if (state is ErrorState && state.failure?.message != null) {
+            AppMessage.showToastMessage(state.failure?.message ?? "");
+            // AppMessage.showNotificationMessage(
+            //     model: NotificationModel(
+            //       title: "ABCD",
+            //       body: "body",
+            //       data: NotificationData(
+            //           notificationId: "1",
+            //           calendarId: "1",
+            //           communicationId: "1",
+            //           notificationType: "1",
+            //           remindId: "1",
+            //           referalCode: "1"),
+            //     ),
+            //     callback: (value) {});
           }
           if (state is DataLoadedState) {
             init();
@@ -59,6 +59,9 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
+                const SizedBox(
+                  height: 200,
+                ),
                 AppTextFeild(
                   err: bloc.errorList['email'],
                   textFormField: TextFormField(
@@ -71,6 +74,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
+                const SizedBox(
+                  height: 10,
+                ),
                 AppTextFeild(
                   err: bloc.errorList['passw'],
                   textFormField: TextFormField(
@@ -82,6 +88,9 @@ class _LoginPageState extends State<LoginPage> {
                       hintText: "Password",
                     ),
                   ),
+                ),
+                const SizedBox(
+                  height: 10,
                 ),
                 BlocBuilder<ValidButtonBloc, BaseState>(
                   bloc: bloc.validLoginBloc,
@@ -114,14 +123,14 @@ class _LoginPageState extends State<LoginPage> {
                             Opacity(
                               opacity: isLoading ? 1 : 0,
                               child: const Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: EdgeInsets.all(8.0),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: CircularProgressIndicator(),
                                 ),
                               ),
                             ),
-                            Center(child: Text("Login")),
+                            const Center(child: Text("Login")),
                           ],
                         ),
                       ),
@@ -148,6 +157,7 @@ class AppTextFeild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           decoration: BoxDecoration(
@@ -159,7 +169,11 @@ class AppTextFeild extends StatelessWidget {
           ),
           child: textFormField,
         ),
-        if (err != null) Text(err!),
+        if (err != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Text(err!),
+          ),
       ],
     );
   }

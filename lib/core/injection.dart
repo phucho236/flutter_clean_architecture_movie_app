@@ -1,4 +1,5 @@
 import 'package:clean_arch_movie_app/core/configured_dio.dart';
+import 'package:clean_arch_movie_app/core/network/network_info.dart';
 import 'package:clean_arch_movie_app/features/auth/data/data_sources/auth_data_source.dart';
 import 'package:clean_arch_movie_app/features/auth/data/repositories/auth_repo_impl.dart';
 import 'package:clean_arch_movie_app/features/auth/domain/use_cases/login_use_case.dart';
@@ -20,6 +21,7 @@ class Injection {
     getIt.registerSingleton<Dio>(
       ConfiguredDio().dio,
     );
+    final networkInfo = getIt.registerSingleton<NetworkInfo>(NetworkInfo());
     final dio = getIt.get<Dio>();
     getIt.registerSingleton<MoviesRepoImpl>(
       MoviesRepoImpl(MoviesRemoteDataSource(dio), GenreMoviesGenerator()),
@@ -31,7 +33,7 @@ class Injection {
           SearchMoviesUseCase(getIt.get<MoviesRepoImpl>()),
         ));
     getIt.registerSingleton<AuthRepoImpl>(
-      AuthRepoImpl(AuthRemoteDataSource(dio)),
+      AuthRepoImpl(networkInfo, AuthRemoteDataSource(dio)),
     );
     getIt.registerFactory<AuthBloc>(
       () => AuthBloc(

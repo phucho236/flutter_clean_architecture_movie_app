@@ -1,9 +1,8 @@
 import 'package:clean_arch_movie_app/core/base_bloc/base_bloc.dart';
 import 'package:clean_arch_movie_app/core/base_bloc/base_event.dart';
 import 'package:clean_arch_movie_app/core/base_bloc/base_state.dart';
-import 'package:clean_arch_movie_app/core/failures/failures.dart';
 import 'package:clean_arch_movie_app/core/presentation/app_validators.dart';
-import 'package:clean_arch_movie_app/features/auth/domain/entities/login.dart';
+import 'package:clean_arch_movie_app/core/request_handler.dart';
 import 'package:clean_arch_movie_app/features/auth/domain/use_cases/login_use_case.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,18 +38,27 @@ class AuthBloc extends BaseBloc {
       errorList['password'] = 'pl input correct passw';
     }
     if (errorList.isNotEmpty) {
-      emit(ErrorState(failure: Failure(msg: errorList.entries.first.value)));
+      emit(ErrorState());
       return;
     }
-    final results = await authUseCase.call(AuthParams(event.email, event.passw));
-    emit(results.fold((l) => ErrorState(), (r) => DataLoadedState<Login>(r)));
+    final either = await authUseCase.call(AuthParams(event.email, event.passw));
+
+    handleEither(either, (r) {
+      emit(DataLoadedState(r));
+    }, onError: () {
+      emit(ErrorState());
+    });
   }
 
   void _onRegister(
     OnRegister event,
     Emitter<BaseState> emit,
   ) async {
-    final results = await authUseCase.call(AuthParams(event.email, event.passw));
-    emit(results.fold((l) => ErrorState(), (r) => DataLoadedState<Login>(r)));
+    final either = await authUseCase.call(AuthParams(event.email, event.passw));
+    handleEither(either, (r) {
+      emit(DataLoadedState(r));
+    }, onError: () {
+      emit(ErrorState());
+    });
   }
 }
