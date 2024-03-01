@@ -20,9 +20,14 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
   void init() async {
     await Storage.init().then((value) {
-      Navigator.pushReplacementNamed(context, MoviesPage.route);
       FlutterNativeSplash.remove();
     });
   }
@@ -35,22 +40,9 @@ class _LoginPageState extends State<LoginPage> {
         listener: (context, state) {
           if (state is ErrorState && state.failure?.message != null) {
             AppMessage.showToastMessage(state.failure?.message ?? "");
-            // AppMessage.showNotificationMessage(
-            //     model: NotificationModel(
-            //       title: "ABCD",
-            //       body: "body",
-            //       data: NotificationData(
-            //           notificationId: "1",
-            //           calendarId: "1",
-            //           communicationId: "1",
-            //           notificationType: "1",
-            //           remindId: "1",
-            //           referalCode: "1"),
-            //     ),
-            //     callback: (value) {});
           }
           if (state is DataLoadedState) {
-            init();
+            Navigator.pushReplacementNamed(context, MoviesPage.route);
           }
         },
         bloc: bloc,

@@ -14,11 +14,10 @@ void main() {
     appName: "",
     flavorName: AppFlavor.DEV,
     resourceIcon: "",
-    secondsTimeout: 30,
+    secondsTimeout: 5,
     socketUrl: "",
   );
   Injection.setup();
   Bloc.observer = MyBlocObserver();
-
   runApp(const CustomMaterialApp());
 }
