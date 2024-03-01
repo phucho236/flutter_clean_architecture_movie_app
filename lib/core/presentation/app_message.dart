@@ -78,7 +78,7 @@ class NotificationMessage extends StatefulWidget {
   const NotificationMessage({Key? key, this.model, this.callback}) : super(key: key);
 
   @override
-  _NotificationMessage createState() => _NotificationMessage();
+  State<NotificationMessage> createState() => _NotificationMessage();
 }
 
 class _NotificationMessage extends State<NotificationMessage> {
@@ -113,7 +113,7 @@ class _NotificationMessage extends State<NotificationMessage> {
                   Container(
                       clipBehavior: Clip.hardEdge,
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-                      child: Text("Icon here")),
+                      child: const Text("Icon here")),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Column(

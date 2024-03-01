@@ -1,6 +1,14 @@
+import 'package:clean_arch_movie_app/core/err/failures.dart';
+
+///One Exception can be many failures
 class ServerException {
   final String message;
   ServerException(this.message);
+}
+
+class NetWorkException {
+  final NetworkFailure failure;
+  NetWorkException(this.failure);
 }
 
 class CacheException {

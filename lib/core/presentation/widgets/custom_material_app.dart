@@ -9,9 +9,17 @@ class CustomMaterialApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final botToastBuilder = BotToastInit();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      builder: BotToastInit(),
+      builder: (context, child) {
+        child = Padding(
+          padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
+          child: child,
+        );
+        child = botToastBuilder(context, child);
+        return child;
+      },
       navigatorObservers: [BotToastNavigatorObserver()],
       title: AppConfig().appName,
       theme: AppTheme.lightTheme,

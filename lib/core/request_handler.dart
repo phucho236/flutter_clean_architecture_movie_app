@@ -1,10 +1,24 @@
 import 'dart:developer';
-
-import 'package:clean_arch_movie_app/core/err/err.dart';
+import 'package:clean_arch_movie_app/core/err/exception.dart';
 import 'package:clean_arch_movie_app/core/err/failures.dart';
 import 'package:clean_arch_movie_app/core/presentation/app_message.dart';
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'network/network_info.dart';
+
+Future<T> handleRemoteRequest<T>(Future<T> Function() onRequest) async {
+  try {
+    T value = await onRequest();
+    return value;
+  } on DioError catch (e) {
+    if (e.type == DioErrorType.connectTimeout) {
+      throw NetWorkException(const NetworkFailure(message: "Connection imeout"));
+    }
+    throw ServerException(e.message);
+  } catch (e) {
+    throw ServerException(e is String ? e : "defaultError of server");
+  }
+}
 
 Future<Either<Failure, T>> handleRepositoryCall<T>(NetworkInfo networkInfo,
     {required Future<Either<Failure, T>> Function() onRemote,
@@ -15,6 +29,8 @@ Future<Either<Failure, T>> handleRepositoryCall<T>(NetworkInfo networkInfo,
       return value;
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));
+    } on NetWorkException catch (e) {
+      return Left(NetworkFailure(message: e.failure.message));
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
@@ -38,7 +54,10 @@ handleEither<B, T extends Failure, S>(Either<T, S> either, B Function(S r) onRes
     }
     if (shouldHandleError) {
       log(defaultError ?? l.message ?? "");
-      handleError(defaultError ?? l.message ?? "", shouldUseDefaultError: defaultError != null || l is NetworkFailure);
+      handleError(
+        defaultError ?? l.message ?? "",
+        shouldUseDefaultError: defaultError != null || l is NetworkFailure,
+      );
     }
   }, onResult);
 }
@@ -53,9 +72,9 @@ handleEitherReturn<B, T extends Failure, S>(Either<T, S> either, B Function(S r)
 }
 
 Future handleError(String message, {bool shouldUseDefaultError = true}) async {
-  String msg = message;
-  if (message.split('DioError').length > 1 || message.split('Timeout').length > 1) {
-    msg = 'timeout';
-  }
-  if (shouldUseDefaultError) AppMessage.showToastMessage(message);
+  AppMessage.showToastMessage(
+    ErrorHandler.parse(message,
+            shouldUseDefaultError: shouldUseDefaultError, defaultError: shouldUseDefaultError ? message : null) ??
+        message,
+  );
 }
