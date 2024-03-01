@@ -14,7 +14,7 @@ void main() {
     appName: "",
     flavorName: AppFlavor.DEV,
     resourceIcon: "",
-    secondsTimeout: 5,
+    secondsTimeout: 30,
     socketUrl: "",
   );
   Injection.setup();

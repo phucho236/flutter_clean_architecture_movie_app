@@ -4,8 +4,12 @@ import 'package:clean_arch_movie_app/core/base_bloc/base_state.dart';
 import 'package:clean_arch_movie_app/core/injection.dart';
 import 'package:clean_arch_movie_app/core/presentation/app_message.dart';
 import 'package:clean_arch_movie_app/core/presentation/storage.dart';
+import 'package:clean_arch_movie_app/core/presentation/widgets/app_button.dart';
+import 'package:clean_arch_movie_app/core/presentation/widgets/app_text_feild.dart';
+import 'package:clean_arch_movie_app/core/presentation/widgets/spacing.dart';
 import 'package:clean_arch_movie_app/features/auth/presentation/manager/auth_bloc/auth_bloc.dart';
 import 'package:clean_arch_movie_app/features/movies/presentation/pages/movies_page.dart';
+import 'package:clean_arch_movie_app/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -49,10 +53,15 @@ class _LoginPageState extends State<LoginPage> {
         builder: (context, state) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
+            child: SpacingColumn(
+              spacing: 10,
               children: [
-                const SizedBox(
-                  height: 200,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 100),
+                  child: Assets.images.flutterLogo.image(
+                    height: 150,
+                    width: 150,
+                  ),
                 ),
                 AppTextFeild(
                   err: bloc.errorList['email'],
@@ -66,9 +75,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
                 AppTextFeild(
                   err: bloc.errorList['passw'],
                   textFormField: TextFormField(
@@ -81,9 +87,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
                 BlocBuilder<ValidButtonBloc, BaseState>(
                   bloc: bloc.validLoginBloc,
                   builder: (context, stateValidBtn) {
@@ -91,41 +94,15 @@ class _LoginPageState extends State<LoginPage> {
                     if (state is LoadingState) {
                       isLoading = true;
                     }
-                    bool open = false;
-                    if (stateValidBtn is DataLoadedState && stateValidBtn.data == true) open = true;
-                    return InkWell(
-                      onTap: open || isLoading
-                          ? () {
-                              bloc.add(OnLogin(email: bloc.phoneL.text, passw: bloc.passwordL.text));
-                            }
-                          : null,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(9),
-                          color: open
-                              ? isLoading
-                                  ? Colors.blueAccent.withOpacity(0.2)
-                                  : Colors.blueAccent
-                              : Colors.grey,
-                        ),
-                        height: 55,
-                        width: double.infinity,
-                        child: Stack(
-                          children: [
-                            Opacity(
-                              opacity: isLoading ? 1 : 0,
-                              child: const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                            ),
-                            const Center(child: Text("Login")),
-                          ],
-                        ),
-                      ),
+                    bool visible = true;
+                    if (stateValidBtn is DataLoadedState && stateValidBtn.data == true) visible = false;
+                    return AppButton(
+                      content: "Login",
+                      visible: visible,
+                      isLoading: isLoading,
+                      onTap: () {
+                        bloc.add(OnLogin(email: bloc.phoneL.text, passw: bloc.passwordL.text));
+                      },
                     );
                   },
                 )
@@ -134,39 +111,6 @@ class _LoginPageState extends State<LoginPage> {
           );
         },
       ),
-    );
-  }
-}
-
-class AppTextFeild extends StatelessWidget {
-  const AppTextFeild({
-    required this.textFormField,
-    this.err,
-    super.key,
-  });
-  final TextFormField textFormField;
-  final String? err;
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(9),
-            border: Border.all(
-              width: 2,
-              color: Colors.blue,
-            ),
-          ),
-          child: textFormField,
-        ),
-        if (err != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: Text(err!),
-          ),
-      ],
     );
   }
 }
