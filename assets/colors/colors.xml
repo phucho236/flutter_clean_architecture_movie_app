@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorBody">#000000</color>
+
+    <!-- Neutrals -->
+    <color name="neutrals01">#141416</color>
+    <color name="neutrals02">#23262F</color>
+    <color name="neutrals03">#353945</color>
+    <color name="neutrals04">#777E91</color>
+    <color name="neutrals05">#B1B5C4</color>
+    <color name="neutrals06">#E6E8EC</color>
+    <color name="neutrals07">#F4F5F6</color>
+    <color name="neutrals08">#FCFCFD</color>
+    <color name="neutrals09">#FFFFFF</color>
+    <color name="neutrals20">#F4F5F7</color>
+
+    <!-- Secondary -->
+    <color name="secondary01">#CC2894</color>
+    <color name="secondary02">#EC1C24</color>
+    <color name="secondary03">#00B43D</color>
+    <color name="secondary04">#CB90EC</color>
+    <color name="secondary05">#EAFAFF</color>
+
+    <!-- Main -->
+    <color name="main01">#00B8EF</color>
+    <color name="main02">#10BCAF</color>
+    <color name="main02Light">#34E8DC</color>
+    <color name="main03">#FEC124</color>
+    <color name="main04">#00A0E8</color>
+    <color name="main04Light">#DAF3FF</color>
+</resources>

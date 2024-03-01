@@ -40,76 +40,78 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<AuthBloc, BaseState>(
-        listener: (context, state) {
-          if (state is ErrorState && state.failure?.message != null) {
-            AppMessage.showToastMessage(state.failure?.message ?? "");
-          }
-          if (state is DataLoadedState) {
-            Navigator.pushReplacementNamed(context, MoviesPage.route);
-          }
-        },
-        bloc: bloc,
-        builder: (context, state) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SpacingColumn(
-              spacing: 10,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 100),
-                  child: Assets.images.flutterLogo.image(
-                    height: 150,
-                    width: 150,
-                  ),
-                ),
-                AppTextFeild(
-                  err: bloc.errorList['email'],
-                  textFormField: TextFormField(
-                    controller: bloc.phoneL,
-                    onChanged: (value) {
-                      bloc.validLoginBloc.add(OnChange<bool>(bloc.validLoginBtn));
-                    },
-                    decoration: const InputDecoration(
-                      hintText: "Email",
+      body: SingleChildScrollView(
+        child: BlocConsumer<AuthBloc, BaseState>(
+          listener: (context, state) {
+            if (state is ErrorState && state.failure?.message != null) {
+              AppMessage.showToastMessage(state.failure?.message ?? "");
+            }
+            if (state is DataLoadedState) {
+              Navigator.pushReplacementNamed(context, MoviesPage.route);
+            }
+          },
+          bloc: bloc,
+          builder: (context, state) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SpacingColumn(
+                spacing: 10,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 100),
+                    child: Assets.images.flutterLogo.image(
+                      height: 150,
+                      width: 150,
                     ),
                   ),
-                ),
-                AppTextFeild(
-                  err: bloc.errorList['passw'],
-                  textFormField: TextFormField(
-                    controller: bloc.passwordL,
-                    onChanged: (value) {
-                      bloc.validLoginBloc.add(OnChange<bool>(bloc.validLoginBtn));
-                    },
-                    decoration: const InputDecoration(
-                      hintText: "Password",
-                    ),
-                  ),
-                ),
-                BlocBuilder<ValidButtonBloc, BaseState>(
-                  bloc: bloc.validLoginBloc,
-                  builder: (context, stateValidBtn) {
-                    bool isLoading = false;
-                    if (state is LoadingState) {
-                      isLoading = true;
-                    }
-                    bool visible = true;
-                    if (stateValidBtn is DataLoadedState && stateValidBtn.data == true) visible = false;
-                    return AppButton(
-                      content: "Login",
-                      visible: visible,
-                      isLoading: isLoading,
-                      onTap: () {
-                        bloc.add(OnLogin(email: bloc.phoneL.text, passw: bloc.passwordL.text));
+                  AppTextFeild(
+                    err: bloc.errorList['email'],
+                    textFormField: TextFormField(
+                      controller: bloc.phoneL,
+                      onChanged: (value) {
+                        bloc.validLoginBloc.add(OnChange<bool>(bloc.validLoginBtn));
                       },
-                    );
-                  },
-                )
-              ],
-            ),
-          );
-        },
+                      decoration: const InputDecoration(
+                        hintText: "Email",
+                      ),
+                    ),
+                  ),
+                  AppTextFeild(
+                    err: bloc.errorList['passw'],
+                    textFormField: TextFormField(
+                      controller: bloc.passwordL,
+                      onChanged: (value) {
+                        bloc.validLoginBloc.add(OnChange<bool>(bloc.validLoginBtn));
+                      },
+                      decoration: const InputDecoration(
+                        hintText: "Password",
+                      ),
+                    ),
+                  ),
+                  BlocBuilder<ValidButtonBloc, BaseState>(
+                    bloc: bloc.validLoginBloc,
+                    builder: (context, stateValidBtn) {
+                      bool isLoading = false;
+                      if (state is LoadingState) {
+                        isLoading = true;
+                      }
+                      bool visible = false;
+                      if (stateValidBtn is DataLoadedState && stateValidBtn.data == true) visible = true;
+                      return AppButton(
+                        content: "Login",
+                        visible: visible,
+                        isLoading: isLoading,
+                        onTap: () {
+                          bloc.add(OnLogin(email: bloc.phoneL.text, passw: bloc.passwordL.text));
+                        },
+                      );
+                    },
+                  )
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
