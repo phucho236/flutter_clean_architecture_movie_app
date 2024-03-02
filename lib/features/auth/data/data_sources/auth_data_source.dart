@@ -1,8 +1,7 @@
 import 'dart:async';
-
 import 'package:clean_arch_movie_app/core/request_handler.dart';
-import 'package:clean_arch_movie_app/features/auth/data/models/login_model.dart';
 import 'package:clean_arch_movie_app/features/auth/domain/use_cases/login_use_case.dart';
+import 'package:clean_arch_movie_app/gen_model/base_mapper.dart';
 import 'package:dio/dio.dart';
 
 class AuthRemoteDataSource {

@@ -19,3 +19,21 @@ Map<String, dynamic> _$TestModelToJson(TestModel instance) => <String, dynamic>{
       'address': instance.address,
       'createdDay': instance.createdDay?.toIso8601String(),
     };
+
+LoginModel _$LoginModelFromJson(Map<String, dynamic> json) => LoginModel(
+      token: json['access_token'] as String?,
+    );
+
+Map<String, dynamic> _$LoginModelToJson(LoginModel instance) =>
+    <String, dynamic>{
+      'access_token': instance.token,
+    };
+
+LoginEntity _$LoginEntityFromJson(Map<String, dynamic> json) => LoginEntity(
+      token: json['access_token'] as String?,
+    );
+
+Map<String, dynamic> _$LoginEntityToJson(LoginEntity instance) =>
+    <String, dynamic>{
+      'access_token': instance.token,
+    };

@@ -1,0 +1,8 @@
+{
+    "data": {
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzNjQsInBhcmVudElkIjoxMjg2MSwiaWF0IjoxNzA5MzU5MTc5LCJleHAiOjE3MTEwNjg1MzkxNTZ9.BqKzLT2WYsQMX-d5ptyU1qQDcXiR37otzcIbYMGGyGM",
+        "payment_status": true
+    },
+    "success": 1,
+    "message": ""
+}

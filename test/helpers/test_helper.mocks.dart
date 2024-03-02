@@ -6,9 +6,11 @@
 import 'dart:async' as _i9;
 
 import 'package:clean_arch_movie_app/core/err/failures.dart' as _i12;
-import 'package:clean_arch_movie_app/features/auth/domain/entities/login_entity.dart' as _i13;
-import 'package:clean_arch_movie_app/features/auth/domain/repositories/auth_repo.dart' as _i11;
-import 'package:clean_arch_movie_app/features/auth/domain/use_cases/login_use_case.dart' as _i14;
+import 'package:clean_arch_movie_app/features/auth/domain/repositories/auth_repo.dart'
+    as _i11;
+import 'package:clean_arch_movie_app/features/auth/domain/use_cases/login_use_case.dart'
+    as _i14;
+import 'package:clean_arch_movie_app/gen_model/base_mapper.dart' as _i13;
 import 'package:dartz/dartz.dart' as _i7;
 import 'package:dio/src/adapter.dart' as _i3;
 import 'package:dio/src/cancel_token.dart' as _i10;
@@ -40,7 +42,8 @@ class _FakeBaseOptions_0 extends _i1.SmartFake implements _i2.BaseOptions {
         );
 }
 
-class _FakeHttpClientAdapter_1 extends _i1.SmartFake implements _i3.HttpClientAdapter {
+class _FakeHttpClientAdapter_1 extends _i1.SmartFake
+    implements _i3.HttpClientAdapter {
   _FakeHttpClientAdapter_1(
     Object parent,
     Invocation parentInvocation,
@@ -126,7 +129,8 @@ class MockDio extends _i1.Mock implements _i8.Dio {
       ) as _i3.HttpClientAdapter);
 
   @override
-  set httpClientAdapter(_i3.HttpClientAdapter? _httpClientAdapter) => super.noSuchMethod(
+  set httpClientAdapter(_i3.HttpClientAdapter? _httpClientAdapter) =>
+      super.noSuchMethod(
         Invocation.setter(
           #httpClientAdapter,
           _httpClientAdapter,
@@ -653,7 +657,8 @@ class MockDio extends _i1.Mock implements _i8.Dio {
             #options: options,
           },
         ),
-        returnValue: _i9.Future<_i6.Response<dynamic>>.value(_FakeResponse_4<dynamic>(
+        returnValue:
+            _i9.Future<_i6.Response<dynamic>>.value(_FakeResponse_4<dynamic>(
           this,
           Invocation.method(
             #download,
@@ -701,7 +706,8 @@ class MockDio extends _i1.Mock implements _i8.Dio {
             #options: options,
           },
         ),
-        returnValue: _i9.Future<_i6.Response<dynamic>>.value(_FakeResponse_4<dynamic>(
+        returnValue:
+            _i9.Future<_i6.Response<dynamic>>.value(_FakeResponse_4<dynamic>(
           this,
           Invocation.method(
             #downloadUri,
@@ -799,7 +805,8 @@ class MockDio extends _i1.Mock implements _i8.Dio {
       ) as _i9.Future<_i6.Response<T>>);
 
   @override
-  _i9.Future<_i6.Response<T>> fetch<T>(_i2.RequestOptions? requestOptions) => (super.noSuchMethod(
+  _i9.Future<_i6.Response<T>> fetch<T>(_i2.RequestOptions? requestOptions) =>
+      (super.noSuchMethod(
         Invocation.method(
           #fetch,
           [requestOptions],
@@ -823,13 +830,16 @@ class MockAuthRepo extends _i1.Mock implements _i11.AuthRepo {
   }
 
   @override
-  _i9.Future<_i7.Either<_i12.Failure, _i13.LoginEntity>> login(_i14.AuthParams? params) => (super.noSuchMethod(
+  _i9.Future<_i7.Either<_i12.Failure, _i13.LoginEntity>> login(
+          _i14.AuthParams? params) =>
+      (super.noSuchMethod(
         Invocation.method(
           #login,
           [params],
         ),
         returnValue:
-            _i9.Future<_i7.Either<_i12.Failure, _i13.LoginEntity>>.value(_FakeEither_5<_i12.Failure, _i13.LoginEntity>(
+            _i9.Future<_i7.Either<_i12.Failure, _i13.LoginEntity>>.value(
+                _FakeEither_5<_i12.Failure, _i13.LoginEntity>(
           this,
           Invocation.method(
             #login,
