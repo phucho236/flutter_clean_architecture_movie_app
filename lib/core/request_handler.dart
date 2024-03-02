@@ -8,15 +8,14 @@ import 'network/network_info.dart';
 
 Future<T> handleRemoteRequest<T>(Future<T> Function() onRequest) async {
   try {
-    T value = await onRequest();
-    return value;
+    return await onRequest();
   } on DioError catch (e) {
     if (e.type == DioErrorType.connectTimeout) {
       throw NetWorkException(const NetworkFailure(message: "Connection imeout"));
     }
-    throw ServerException(e.message);
+    throw ServerException(message: "An error has occured");
   } catch (e) {
-    throw ServerException(e is String ? e : "defaultError of server");
+    throw ServerException(message: e.toString());
   }
 }
 
@@ -25,23 +24,18 @@ Future<Either<Failure, T>> handleRepositoryCall<T>(NetworkInfo networkInfo,
     required Future<Either<Failure, T>> Function() onLocal}) async {
   if (await networkInfo.isConnected) {
     try {
-      Either<Failure, T> value = await onRemote();
-      return value;
-    } on ServerException catch (e) {
-      return Left(ServerFailure(e.message));
+      return await onRemote();
     } on NetWorkException catch (e) {
       return Left(NetworkFailure(message: e.failure.message));
-    } catch (e) {
-      return Left(ServerFailure(e.toString()));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
     }
   } else {
     try {
       Either<Failure, T> value = await onLocal();
       return value;
-    } on CacheException catch (e) {
-      return Left(ServerFailure(e.message));
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ServerFailure(message: e.toString()));
     }
   }
 }

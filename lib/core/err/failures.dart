@@ -8,7 +8,7 @@ abstract class Failure extends Equatable {
 }
 
 class ServerFailure extends Failure {
-  const ServerFailure(String message) : super(message);
+  const ServerFailure({String? message}) : super(message);
 }
 
 class NetworkFailure extends Failure {

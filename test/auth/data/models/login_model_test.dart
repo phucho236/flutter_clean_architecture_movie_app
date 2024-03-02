@@ -21,7 +21,7 @@ void main() {
   });
   test("should return valid model to json", () async {
     //arrange
-    final Map<String, dynamic> jsonData = json.decode(readJson('helpers/dummy_data/dummy_login_res.json'))["data"];
+    // final Map<String, dynamic> jsonData = json.decode(readJson('helpers/dummy_data/dummy_login_res.json'))["data"];
     //act
     final res = LoginModel(token: token).toJson();
     //assert

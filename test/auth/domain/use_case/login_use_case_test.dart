@@ -6,11 +6,11 @@ import '../../../helpers/test_helper.mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  LoginUseCase? loginUseCase;
-  MockAuthRepo? mockAuthRepo;
+  late LoginUseCase loginUseCase;
+  late MockAuthRepo mockAuthRepo;
   setUp(() {
     mockAuthRepo = MockAuthRepo();
-    loginUseCase = LoginUseCase(mockAuthRepo!);
+    loginUseCase = LoginUseCase(mockAuthRepo);
   });
 
   //LoginEntity model from domain/entities
@@ -18,9 +18,9 @@ void main() {
   var authParams = AuthParams("email", "passw");
   test("Get data login from repo", () async {
     //arrange
-    when(mockAuthRepo!.login(authParams)).thenAnswer((_) async => Right(loginData));
+    when(mockAuthRepo.login(authParams)).thenAnswer((_) async => Right(loginData));
     //acr
-    final result = await loginUseCase!.call(authParams);
+    final result = await loginUseCase.call(authParams);
     //assert
     expect(result, Right(loginData));
   });
