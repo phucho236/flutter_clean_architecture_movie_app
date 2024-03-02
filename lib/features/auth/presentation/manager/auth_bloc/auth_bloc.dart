@@ -9,13 +9,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'auth_event.dart';
 
 class AuthBloc extends BaseBloc {
-  final AuthUseCase authUseCase;
+  final LoginUseCase loginUseCase;
   final ValidButtonBloc validLoginBloc = ValidButtonBloc();
   TextEditingController phoneL = TextEditingController();
   TextEditingController passwordL = TextEditingController();
   Map<String, String?> errorList = {};
   get validLoginBtn => phoneL.text.isNotEmpty && passwordL.text.isNotEmpty;
-  AuthBloc(this.authUseCase) : super(InitialState()) {
+  AuthBloc(this.loginUseCase) : super(InitialState()) {
     onLoad<OnLogin>(
       _onLogin,
     );
@@ -41,7 +41,7 @@ class AuthBloc extends BaseBloc {
       emit(ErrorState());
       return;
     }
-    final either = await authUseCase.call(AuthParams(event.email, event.passw));
+    final either = await loginUseCase.call(AuthParams(event.email, event.passw));
 
     handleEither(either, (r) {
       emit(DataLoadedState(r));
@@ -54,7 +54,7 @@ class AuthBloc extends BaseBloc {
     OnRegister event,
     Emitter<BaseState> emit,
   ) async {
-    final either = await authUseCase.call(AuthParams(event.email, event.passw));
+    final either = await loginUseCase.call(AuthParams(event.email, event.passw));
     handleEither(either, (r) {
       emit(DataLoadedState(r));
     }, onError: () {

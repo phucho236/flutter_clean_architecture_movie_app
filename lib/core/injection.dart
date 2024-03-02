@@ -37,7 +37,7 @@ class Injection {
     );
     getIt.registerFactory<AuthBloc>(
       () => AuthBloc(
-        AuthUseCase(getIt.get<AuthRepoImpl>()),
+        LoginUseCase(getIt.get<AuthRepoImpl>()),
       ),
     );
   }

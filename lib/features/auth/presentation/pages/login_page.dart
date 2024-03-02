@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                       bool visible = false;
                       if (stateValidBtn is DataLoadedState && stateValidBtn.data == true) visible = true;
                       return AppButton(
-                        content: "Login",
+                        content: "LoginEntity",
                         visible: visible,
                         isLoading: isLoading,
                         onTap: () {

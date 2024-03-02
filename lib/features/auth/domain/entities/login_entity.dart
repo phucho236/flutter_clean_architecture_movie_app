@@ -4,10 +4,10 @@
 
 import 'package:clean_arch_movie_app/features/auth/data/models/login_model.dart';
 
-class Login {
-  Login({this.token});
+class LoginEntity {
+  LoginEntity({this.token});
   String? token;
-  Login fromModel(LoginModel model) {
+  LoginEntity fromModel(LoginModel model) {
     token = model.token;
     return this;
   }
