@@ -18,11 +18,11 @@ final getIt = GetIt.instance;
 
 class Injection {
   static setup() async {
-    getIt.registerSingleton<Dio>(
+    final dio = getIt.registerSingleton<Dio>(
       ConfiguredDio().dio,
     );
     final networkInfo = getIt.registerSingleton<NetworkInfo>(NetworkInfo());
-    final dio = getIt.get<Dio>();
+
     getIt.registerSingleton<MoviesRepoImpl>(
       MoviesRepoImpl(MoviesRemoteDataSource(dio), GenreMoviesGenerator()),
     );
