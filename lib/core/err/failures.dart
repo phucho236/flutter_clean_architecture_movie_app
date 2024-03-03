@@ -7,6 +7,10 @@ abstract class Failure extends Equatable {
   List<Object> get props => [];
 }
 
+class DataInputFailure extends Failure {
+  const DataInputFailure({String? message}) : super(message);
+}
+
 class ServerFailure extends Failure {
   const ServerFailure({String? message}) : super(message);
 }

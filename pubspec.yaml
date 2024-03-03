@@ -29,6 +29,7 @@ dev_dependencies:
   flutter_gen_runner:
   json_serializable:
   json_annotation:
+  bloc_test:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:clean_arch_movie_app/gen_model/base_mapper.dart';
 import 'package:flutter_test/flutter_test.dart';
-import '../../../helpers/json_reader.dart';
+import '../../../../helpers/json_reader.dart';
 
 void main() {
   var token =

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
 
 class AppMessage {
-  static showToastMessage(String? message, {int seconds = 2}) {
+  showToastMessage(String? message, {int seconds = 2}) {
     if (message == null) return;
     BotToast.showCustomNotification(
       animationDuration: const Duration(milliseconds: 200),
@@ -14,7 +14,7 @@ class AppMessage {
     );
   }
 
-  static showNotificationMessage({NotificationModel? model, NotificationCallback? callback}) {
+  showNotificationMessage({NotificationModel? model, NotificationCallback? callback}) {
     BotToast.showCustomNotification(
       animationDuration: const Duration(milliseconds: 200),
       animationReverseDuration: const Duration(milliseconds: 200),
@@ -29,6 +29,13 @@ class AppMessage {
         );
       },
     );
+  }
+}
+
+class AppMessageTest extends AppMessage {
+  @override
+  showToastMessage(String? message, {int seconds = 2}) {
+    return;
   }
 }
 

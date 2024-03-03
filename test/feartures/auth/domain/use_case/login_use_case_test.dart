@@ -2,7 +2,7 @@ import 'package:clean_arch_movie_app/features/auth/domain/use_cases/login_use_ca
 import 'package:clean_arch_movie_app/gen_model/base_mapper.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mockito/mockito.dart';
-import '../../../helpers/test_helper.mocks.dart';
+import '../../../../helpers/test_helper.mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:clean_arch_movie_app/core/err/exception.dart';
 import 'package:clean_arch_movie_app/core/err/failures.dart';
+import 'package:clean_arch_movie_app/core/injection.dart';
 import 'package:clean_arch_movie_app/core/presentation/app_message.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -66,9 +67,14 @@ handleEitherReturn<B, T extends Failure, S>(Either<T, S> either, B Function(S r)
 }
 
 Future handleError(String message, {bool shouldUseDefaultError = true}) async {
-  AppMessage.showToastMessage(
-    ErrorHandler.parse(message,
-            shouldUseDefaultError: shouldUseDefaultError, defaultError: shouldUseDefaultError ? message : null) ??
-        message,
-  );
+  try {
+    // because test getit dont init so Thinking to much about injection this AppMessage to all bloc ?
+    getIt<AppMessage>().showToastMessage(
+      ErrorHandler.parse(message,
+              shouldUseDefaultError: shouldUseDefaultError, defaultError: shouldUseDefaultError ? message : null) ??
+          message,
+    );
+  } catch (e) {
+    return;
+  }
 }

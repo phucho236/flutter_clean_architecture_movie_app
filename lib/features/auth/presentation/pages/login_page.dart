@@ -7,6 +7,7 @@ import 'package:clean_arch_movie_app/core/presentation/storage.dart';
 import 'package:clean_arch_movie_app/core/presentation/widgets/app_button.dart';
 import 'package:clean_arch_movie_app/core/presentation/widgets/app_text_feild.dart';
 import 'package:clean_arch_movie_app/core/presentation/widgets/spacing.dart';
+import 'package:clean_arch_movie_app/features/auth/domain/use_cases/login_use_case.dart';
 import 'package:clean_arch_movie_app/features/auth/presentation/manager/auth_bloc/auth_bloc.dart';
 import 'package:clean_arch_movie_app/features/movies/presentation/pages/movies_page.dart';
 import 'package:clean_arch_movie_app/gen/assets.gen.dart';
@@ -44,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
         child: BlocConsumer<AuthBloc, BaseState>(
           listener: (context, state) {
             if (state is ErrorState && state.failure?.message != null) {
-              AppMessage.showToastMessage(state.failure?.message ?? "");
+              getIt<AppMessage>().showToastMessage(state.failure?.message ?? "");
             }
             if (state is DataLoadedState) {
               Navigator.pushReplacementNamed(context, MoviesPage.route);
@@ -102,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                         visible: visible,
                         isLoading: isLoading,
                         onTap: () {
-                          bloc.add(OnLogin(email: bloc.phoneL.text, passw: bloc.passwordL.text));
+                          bloc.add(OnLogin(authParams: AuthParams(bloc.phoneL.text, bloc.passwordL.text)));
                         },
                       );
                     },

@@ -1,9 +1,11 @@
 import 'package:clean_arch_movie_app/core/base_bloc/base_bloc.dart';
 import 'package:clean_arch_movie_app/core/base_bloc/base_event.dart';
 import 'package:clean_arch_movie_app/core/base_bloc/base_state.dart';
+import 'package:clean_arch_movie_app/core/err/failures.dart';
 import 'package:clean_arch_movie_app/core/presentation/app_validators.dart';
 import 'package:clean_arch_movie_app/core/request_handler.dart';
 import 'package:clean_arch_movie_app/features/auth/domain/use_cases/login_use_case.dart';
+import 'package:clean_arch_movie_app/gen_model/base_mapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 part 'auth_event.dart';
@@ -16,7 +18,7 @@ class AuthBloc extends BaseBloc {
   Map<String, String?> errorList = {};
   get validLoginBtn => phoneL.text.isNotEmpty && passwordL.text.isNotEmpty;
   AuthBloc(this.loginUseCase) : super(InitialState()) {
-    onLoad<OnLogin>(
+    on<OnLogin>(
       _onLogin,
     );
     onLoad<OnRegister>(
@@ -28,8 +30,9 @@ class AuthBloc extends BaseBloc {
     OnLogin event,
     Emitter<BaseState> emit,
   ) async {
-    bool isValidPhoneNumber = AppValidators.isValidEmail(phoneL.text);
-    bool isValidPassword = AppValidators.isValidPassword(passwordL.text);
+    emit(LoadingState());
+    bool isValidPhoneNumber = AppValidators.isValidEmail(event.authParams.email);
+    bool isValidPassword = AppValidators.isValidPassword(event.authParams.passw);
     errorList = {};
     if (!isValidPhoneNumber) {
       errorList['email'] = 'pl input correct email';
@@ -38,16 +41,20 @@ class AuthBloc extends BaseBloc {
       errorList['password'] = 'pl input correct passw';
     }
     if (errorList.isNotEmpty) {
-      emit(ErrorState());
+      emit(ErrorState(failure: DataInputFailure(message: errorList.entries.first.value)));
       return;
     }
-    final either = await loginUseCase.call(AuthParams(event.email, event.passw));
+    final either = await loginUseCase.call(event.authParams);
 
-    handleEither(either, (r) {
-      emit(DataLoadedState(r));
-    }, onError: () {
-      emit(ErrorState());
-    });
+    handleEither<void, Failure, LoginEntity>(
+      either,
+      (r) {
+        emit(DataLoadedState<LoginEntity>(r));
+      },
+      onError: () {
+        emit(ErrorState());
+      },
+    );
   }
 
   void _onRegister(
