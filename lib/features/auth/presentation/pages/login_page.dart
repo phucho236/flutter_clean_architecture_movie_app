@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
         child: BlocConsumer<AuthBloc, BaseState>(
           listener: (context, state) {
             if (state is ErrorState && state.failure?.message != null) {
-              getIt<AppMessage>().showToastMessage(state.failure?.message ?? "");
+              AppMessage().showToastMessage(state.failure?.message ?? "");
             }
             if (state is DataLoadedState) {
               Navigator.pushReplacementNamed(context, MoviesPage.route);
