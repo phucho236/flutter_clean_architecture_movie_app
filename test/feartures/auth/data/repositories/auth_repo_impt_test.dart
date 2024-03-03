@@ -11,11 +11,11 @@ import 'package:mockito/mockito.dart';
 import '../../../../helpers/test_helper.mocks.dart';
 
 void main() {
-  late MockAuthRemoteDataSource mockAuthRemoteDataSource;
+  late MockAuthRemoteDataSourceImpl mockAuthRemoteDataSource;
   late AuthRepoImpl authRepoImpl;
   late AuthRepoImpl authRepoImplNotConnect;
   setUp(() {
-    mockAuthRemoteDataSource = MockAuthRemoteDataSource();
+    mockAuthRemoteDataSource = MockAuthRemoteDataSourceImpl();
     authRepoImpl = AuthRepoImpl(NetworkInfoConnectedTest(), mockAuthRemoteDataSource);
     authRepoImplNotConnect = AuthRepoImpl(NetworkInfoUnconnectedTest(), mockAuthRemoteDataSource);
   });

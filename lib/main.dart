@@ -1,3 +1,4 @@
+import 'package:clean_arch_movie_app/core/constants/constants.dart';
 import 'package:clean_arch_movie_app/core/injection.dart';
 import 'package:clean_arch_movie_app/core/presentation/app_config.dart';
 import 'package:clean_arch_movie_app/core/presentation/my_bloc_observer.dart';

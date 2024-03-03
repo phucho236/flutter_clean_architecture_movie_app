@@ -17,6 +17,7 @@ void main() {
     secondsTimeout: 30,
     socketUrl: "",
   );
+
   Injection.setup();
   Bloc.observer = MyBlocObserver();
   runApp(const CustomMaterialApp());
