@@ -32,9 +32,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void init() async {
-    await Storage.init().then((value) {
-      FlutterNativeSplash.remove();
-    });
+    if (!Storage.hadInited) {
+      await Storage.init();
+    }
+    //init any thing need await when start app here
+
+    FlutterNativeSplash.remove();
   }
 
   final bloc = getIt<AuthBloc>();

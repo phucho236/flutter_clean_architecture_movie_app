@@ -8,6 +8,7 @@ class KeyStorage {
 
 class Storage {
   static Storage? _instance;
+  static bool hadInited = false;
   Storage._(this.preferences);
   SharedPreferences? preferences;
 
@@ -15,14 +16,15 @@ class Storage {
 
   factory Storage() {
     if (_instance == null) {
-      log('need call init Strorage');
+      log('need call init Storage');
     }
     return _instance!;
   }
 
   static Future init({SharedPreferences? pres}) async {
+    hadInited = true;
     if (_instance != null) {
-      throw 'Strorage had inited';
+      throw 'Storage had inited';
     }
     _instance = Storage._(pres ?? await SharedPreferences.getInstance());
     return _instance;
@@ -32,7 +34,7 @@ class Storage {
     return _instance;
   }
 
-  Future<void> dissposse() async {
+  Future<void> dispose() async {
     await preferences?.remove(_key.tokenKey);
   }
 }

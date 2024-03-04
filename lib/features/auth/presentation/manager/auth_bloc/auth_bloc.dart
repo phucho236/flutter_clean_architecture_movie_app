@@ -13,8 +13,8 @@ part 'auth_event.dart';
 class AuthBloc extends BaseBloc {
   final LoginUseCase loginUseCase;
   final ValidButtonBloc validLoginBloc = ValidButtonBloc();
-  TextEditingController phoneL = TextEditingController();
-  TextEditingController passwordL = TextEditingController();
+  TextEditingController phoneL = TextEditingController(text: "123@gmail.com");
+  TextEditingController passwordL = TextEditingController(text: "123123");
   Map<String, String?> errorList = {};
   get validLoginBtn => phoneL.text.isNotEmpty && passwordL.text.isNotEmpty;
   AuthBloc(this.loginUseCase) : super(InitialState()) {

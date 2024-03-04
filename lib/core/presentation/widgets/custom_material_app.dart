@@ -9,7 +9,6 @@ class CustomMaterialApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     final botToastBuilder = BotToastInit();
     return GestureDetector(
       onTap: () {

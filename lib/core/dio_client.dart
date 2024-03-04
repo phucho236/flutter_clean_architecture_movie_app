@@ -10,17 +10,21 @@ import 'package:dio/dio.dart';
 class DioClient {
   DioClient({
     required this.dio,
-    required this.storage,
-    required this.appConfig,
-  });
 
-  final Storage storage;
-  final AppConfig appConfig;
+    ///using for test. if you use in app does not input Storage
+    Storage? storage,
+    required AppConfig appConfig,
+  }) : super() {
+    _appConfig = appConfig;
+    _storage = storage;
+  }
+  Storage? _storage;
+  late AppConfig _appConfig;
   final Dio dio;
   Future<dynamic> call(DioParams fields, {String? contentType}) async {
     String url = '';
     if (fields.url == null) {
-      url = '${appConfig.apiUrl}${fields.endpoint}';
+      url = '${_appConfig.apiUrl}${fields.endpoint}';
     } else {
       url = '${fields.url}${fields.endpoint}';
     }
@@ -35,14 +39,24 @@ class DioClient {
     }
     Map<String, String> header = fields.headers ?? <String, String>{};
     if (fields.needAuthrorize) {
-      String? token = storage.getToken;
+      //after login succes storage had token, if first init storage dont need init
+      if (_storage == null && Storage.hadInited) {
+        _storage = Storage();
+      }
+      String? token = _storage?.getToken;
       header['Authorization'] = 'Bearer ${token ?? ''}';
       log(token.toString());
     }
-    log('=======>${fields.httpMethod}: $url ${fields.body.toString()}');
+    log('=======>${fields.httpMethod}: $url ${fields.body != null ? fields.body.toString() : ""}');
 
-    final rawResponse =
-        (await _connect(fields.httpMethod, url: url, headers: header, body: fields.body, contentType: contentType));
+    final rawResponse = (await _connect(
+      fields.httpMethod,
+      url: (fields.url ?? _appConfig.apiUrl) + fields.endpoint,
+      headers: header,
+      body: fields.body,
+      contentType: contentType,
+      queryParameters: fields.params,
+    ));
     if (fields.shouldHandleResponse) {
       return rawResponse.handleError(fields.allowedStatusCodes);
     } else {
@@ -50,13 +64,12 @@ class DioClient {
     }
   }
 
-  Future<Response> _connect(
-    HttpMethod method, {
-    required String url,
-    String? contentType,
-    Map<String, String>? headers,
-    dynamic body,
-  }) async {
+  Future<Response> _connect(HttpMethod method,
+      {required String url,
+      String? contentType,
+      Map<String, String>? headers,
+      dynamic body,
+      Map<String, dynamic>? queryParameters}) async {
     if (headers != null) {
       dio.options = BaseOptions(
         // dont use because some time in app call more one api
@@ -67,24 +80,41 @@ class DioClient {
         validateStatus: (statusCode) {
           return statusCode! <= 1000;
         },
-        connectTimeout: appConfig.secondsTimeout * 1000,
-        receiveTimeout: appConfig.secondsTimeout * 1000,
+        connectTimeout: _appConfig.secondsTimeout * 1000,
+        receiveTimeout: _appConfig.secondsTimeout * 1000,
       );
     }
 
     switch (method) {
       case HttpMethod.DELETE:
-        return dio.delete(url, data: body);
+        return dio.delete(
+          url,
+          data: body,
+          queryParameters: queryParameters,
+        );
       case HttpMethod.GET:
-        return dio.get(url);
+        return dio.get(
+          url,
+          queryParameters: queryParameters,
+        );
       case HttpMethod.POST:
-        return (dio.post(url, data: body));
+        return (dio.post(
+          url,
+          data: body,
+          queryParameters: queryParameters,
+        ));
       case HttpMethod.PUT:
-        return (dio.put(url, data: body));
+        return (dio.put(
+          url,
+          data: body,
+          queryParameters: queryParameters,
+        ));
       case HttpMethod.PATCH:
-        return (dio.patch(url, data: body));
-      default:
-        return dio.get(url);
+        return (dio.patch(
+          url,
+          data: body,
+          queryParameters: queryParameters,
+        ));
     }
   }
 }
@@ -94,7 +124,7 @@ extension ResponseExtension on Response {
   Map<String, dynamic>? handleError(List<int> allowedStatusCodes) {
     if (data == null) return {};
     Map<String, dynamic> json;
-    if ((allowedStatusCodes.contains(statusCode)) || statusCode! < 400) {
+    if ((allowedStatusCodes.contains(statusCode))) {
       if (data is! Map<String, dynamic>) {
         json = jsonDecode(data);
       } else {
@@ -102,7 +132,6 @@ extension ResponseExtension on Response {
       }
       return json;
     } else {
-      if ((statusCode == 401) && data["message"] != null) {}
       String errorText = "";
       if (data["errors"] != null) {
         inspect(data);
@@ -146,5 +175,5 @@ class DioParams {
       this.dynamicResponse = false,
       this.needAuthrorize = true,
       this.shouldHandleResponse = true,
-      this.allowedStatusCodes = const []});
+      this.allowedStatusCodes = const [200]});
 }

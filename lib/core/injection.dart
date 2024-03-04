@@ -20,14 +20,11 @@ final getIt = GetIt.instance;
 
 class Injection {
   static setup() async {
-    final dioClient = getIt.registerSingleton<DioClient>(
-      DioClient(
-        dio: Dio(),
-        appConfig: AppConfig(),
-        storage: Storage(),
-      ),
+    final dioClient = DioClient(
+      dio: Dio(),
+      appConfig: AppConfig(),
     );
-    final networkInfo = getIt.registerSingleton<NetworkInfo>(NetworkInfo());
+    final networkInfo = NetworkInfo();
     getIt.registerSingleton<MoviesRepoImpl>(
       MoviesRepoImpl(MoviesRemoteDataSource(dioClient), GenreMoviesGenerator()),
     );

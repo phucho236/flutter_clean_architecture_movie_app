@@ -6,7 +6,6 @@
 import 'dart:async' as _i10;
 
 import 'package:clean_arch_movie_app/core/err/failures.dart' as _i11;
-import 'package:clean_arch_movie_app/core/presentation/storage.dart' as _i16;
 import 'package:clean_arch_movie_app/features/auth/data/data_sources/auth_data_source.dart'
     as _i13;
 import 'package:clean_arch_movie_app/features/auth/domain/repositories/auth_repo.dart'
@@ -23,7 +22,6 @@ import 'package:dio/src/options.dart' as _i5;
 import 'package:dio/src/response.dart' as _i9;
 import 'package:dio/src/transformer.dart' as _i7;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:shared_preferences/shared_preferences.dart' as _i17;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -955,32 +953,4 @@ class MockDio extends _i1.Mock implements _i14.Dio {
           ),
         )),
       ) as _i10.Future<_i9.Response<T>>);
-}
-
-/// A class which mocks [Storage].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockStorage extends _i1.Mock implements _i16.Storage {
-  MockStorage() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  set preferences(_i17.SharedPreferences? _preferences) => super.noSuchMethod(
-        Invocation.setter(
-          #preferences,
-          _preferences,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i10.Future<void> dissposse() => (super.noSuchMethod(
-        Invocation.method(
-          #dissposse,
-          [],
-        ),
-        returnValue: _i10.Future<void>.value(),
-        returnValueForMissingStub: _i10.Future<void>.value(),
-      ) as _i10.Future<void>);
 }

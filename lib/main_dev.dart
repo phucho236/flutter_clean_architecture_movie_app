@@ -6,19 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-void main() {
+void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   AppConfig.init(
-    apiUrl: 'https://wookie.codesubmit.io/',
+    apiUrl: 'https://wookie.codesubmit.io',
     appName: "",
     flavorName: AppFlavor.DEV,
     resourceIcon: "",
     secondsTimeout: 30,
     socketUrl: "",
   );
-
-  Injection.setup();
   Bloc.observer = MyBlocObserver();
+  Injection.setup();
   runApp(const CustomMaterialApp());
 }
