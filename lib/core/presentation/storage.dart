@@ -20,12 +20,12 @@ class Storage {
     return _instance!;
   }
 
-  static Future init() async {
+  static Future init({SharedPreferences? pres}) async {
     if (_instance != null) {
       throw 'Strorage had inited';
     }
-    _instance = Storage._(await SharedPreferences.getInstance());
-    return;
+    _instance = Storage._(pres ?? await SharedPreferences.getInstance());
+    return _instance;
   }
 
   getInstance() {
