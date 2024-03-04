@@ -4,6 +4,7 @@ import 'package:clean_arch_movie_app/core/err/failures.dart';
 import 'package:clean_arch_movie_app/core/presentation/app_message.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'network/network_info.dart';
 
 Future<T> handleRemoteRequest<T>(Future<T> Function() onRequest) async {
@@ -12,9 +13,9 @@ Future<T> handleRemoteRequest<T>(Future<T> Function() onRequest) async {
     return value;
   } on DioError catch (e) {
     if (e.type == DioErrorType.connectTimeout) {
-      throw NetWorkException(const NetworkFailure(message: "Connection imeout"));
+      throw NetWorkException(NetworkFailure(message: 'connection_timeout'.tr()));
     }
-    throw ServerException(message: "An error has occured");
+    throw ServerException(message: 'an_error_has_occured'.tr());
   }
 }
 

@@ -6,6 +6,7 @@ import 'package:clean_arch_movie_app/core/err/exception.dart';
 import 'package:clean_arch_movie_app/core/presentation/app_config.dart';
 import 'package:clean_arch_movie_app/core/presentation/storage.dart';
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class DioClient {
   DioClient({
@@ -150,7 +151,7 @@ extension ResponseExtension on Response {
     }
   }
 
-  static String defaultErr = "うまく接続できなかったようです。再度お試しください。";
+  static String defaultErr = 'an_error_has_occured'.tr();
   //It seems that the connection was not successful. Please try again.
 }
 

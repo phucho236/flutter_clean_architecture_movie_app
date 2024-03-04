@@ -6,6 +6,7 @@ import 'package:clean_arch_movie_app/core/presentation/app_validators.dart';
 import 'package:clean_arch_movie_app/core/request_handler.dart';
 import 'package:clean_arch_movie_app/features/auth/domain/use_cases/login_use_case.dart';
 import 'package:clean_arch_movie_app/gen_model/base_mapper.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 part 'auth_event.dart';
@@ -35,10 +36,10 @@ class AuthBloc extends BaseBloc {
     bool isValidPassword = AppValidators.isValidPassword(event.authParams.passw);
     errorList = {};
     if (!isValidPhoneNumber) {
-      errorList['email'] = 'pl input correct email';
+      errorList['email'] = 'invalid_email'.tr();
     }
     if (!isValidPassword) {
-      errorList['password'] = 'pl input correct passw';
+      errorList['password'] = 'invalid_pasword'.tr();
     }
     if (errorList.isNotEmpty) {
       emit(ErrorState(failure: DataInputFailure(message: errorList.entries.first.value)));

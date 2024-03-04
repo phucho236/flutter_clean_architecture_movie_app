@@ -11,6 +11,7 @@ import 'package:clean_arch_movie_app/features/auth/domain/use_cases/login_use_ca
 import 'package:clean_arch_movie_app/features/auth/presentation/manager/auth_bloc/auth_bloc.dart';
 import 'package:clean_arch_movie_app/features/movies/presentation/pages/movies_page.dart';
 import 'package:clean_arch_movie_app/gen/assets.gen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -75,8 +76,8 @@ class _LoginPageState extends State<LoginPage> {
                       onChanged: (value) {
                         bloc.validLoginBloc.add(OnChange<bool>(bloc.validLoginBtn));
                       },
-                      decoration: const InputDecoration(
-                        hintText: "Email",
+                      decoration: InputDecoration(
+                        hintText: "auth.email".tr(),
                       ),
                     ),
                   ),
@@ -87,8 +88,8 @@ class _LoginPageState extends State<LoginPage> {
                       onChanged: (value) {
                         bloc.validLoginBloc.add(OnChange<bool>(bloc.validLoginBtn));
                       },
-                      decoration: const InputDecoration(
-                        hintText: "Password",
+                      decoration: InputDecoration(
+                        hintText: "auth.password".tr(),
                       ),
                     ),
                   ),
@@ -102,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                       bool visible = false;
                       if (stateValidBtn is DataLoadedState && stateValidBtn.data == true) visible = true;
                       return AppButton(
-                        content: "LoginEntity",
+                        content: "auth.login".tr(),
                         visible: visible,
                         isLoading: isLoading,
                         onTap: () {

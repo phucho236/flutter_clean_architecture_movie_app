@@ -1,4 +1,5 @@
 import 'package:clean_arch_movie_app/core/err/failures.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 ///One Exception can be many failures
 class ServerException {
@@ -20,11 +21,8 @@ class ErrorHandler {
   ///map err from server to correct
 
   static final errors = {
-    "Email or password is incorrect": "Email or password is incorrect",
-    "Your card's security code is invalid.": "Your card's security code is invalid",
-    "Token expired": "Token expired",
-    '"email" must be a valid email': '"email" must be a valid email',
-    "Access token is expired": "Access token is expired",
+    "Email or password is incorrect": 'email_or_pass_incorrect'.tr(),
+    "Token expired": 'token_expired'.tr(),
   };
 
   static String? parse(String error, {bool shouldUseDefaultError = true, String? defaultError}) {
@@ -42,7 +40,7 @@ class ErrorHandler {
       return error.replaceAll("E_SEN001", "");
     }
     if (defaultError != null || shouldUseDefaultError) {
-      return defaultError ?? "エラーが発生しました";
+      return defaultError ?? 'an_error_has_occured'.tr();
     }
     return errors.containsKey(error) ? errors[error] : error;
   }

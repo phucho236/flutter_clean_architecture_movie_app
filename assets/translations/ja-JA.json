@@ -1,0 +1,25 @@
+{
+    "messages": {
+        "invalid_email": "Please enter valid email",
+        "invalid_pasword": "Please enter valid password",
+        "undefined_server_error": "",
+        "network_error": "",
+        "email_or_pass_incorrect": "Email or Password incorrect",
+        "connection_error": ""
+    },
+    "common": {
+        "submit": "Submit"
+    },
+    "auth": {
+        "email": "Email",
+        "password": "Password",
+        "login": "Login",
+        "forget_password": "Forget Password",
+        "resend_confirm_email": ""
+    },
+    "err": {
+        "an_error_has_occured": "An error has occured",
+        "connection_timeout": "Connection timeout",
+        "access_token_expired": "Access token is expired"
+    }
+}

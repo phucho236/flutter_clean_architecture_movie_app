@@ -22,6 +22,7 @@ dependencies:
   cached_network_image: ^3.2.1
   flutter_native_splash: ^2.2.19
   connectivity_plus: ^5.0.2
+  easy_localization: ^3.0.1
   mockito: ^5.4.0
 
 dev_dependencies:
@@ -80,6 +81,7 @@ flutter:
     - assets/
     - assets/images/
     - assets/images/
+    - assets/translations/
   fonts:
     - family: GoogleSans
       fonts:
