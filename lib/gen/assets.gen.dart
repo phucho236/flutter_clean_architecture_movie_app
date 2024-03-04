@@ -20,10 +20,24 @@ class $AssetsImagesGen {
   List<AssetGenImage> get values => [flutterLogo];
 }
 
+class $AssetsTranslationsGen {
+  const $AssetsTranslationsGen();
+
+  /// File path: assets/translations/en-US.json
+  String get enUS => 'assets/translations/en-US.json';
+
+  /// File path: assets/translations/ja-JA.json
+  String get jaJA => 'assets/translations/ja-JA.json';
+
+  /// List of all assets
+  List<String> get values => [enUS, jaJA];
+}
+
 class Assets {
   Assets._();
 
   static const $AssetsImagesGen images = $AssetsImagesGen();
+  static const $AssetsTranslationsGen translations = $AssetsTranslationsGen();
 }
 
 class AssetGenImage {

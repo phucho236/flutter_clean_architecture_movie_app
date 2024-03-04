@@ -16,6 +16,10 @@ Future<T> handleRemoteRequest<T>(Future<T> Function() onRequest) async {
       throw NetWorkException(NetworkFailure(message: 'connection_timeout'.tr()));
     }
     throw ServerException(message: 'an_error_has_occured'.tr());
+  } on ServerException {
+    rethrow;
+  } catch (e) {
+    throw ServerException(message: e.toString());
   }
 }
 

@@ -1,8 +1,6 @@
 import 'package:clean_arch_movie_app/core/constants/constants.dart';
 import 'package:clean_arch_movie_app/core/dio_client.dart';
-import 'package:clean_arch_movie_app/core/enums.dart';
 import 'package:clean_arch_movie_app/core/err/exception.dart';
-import 'package:clean_arch_movie_app/core/err/failures.dart';
 import 'package:clean_arch_movie_app/core/presentation/app_config.dart';
 import 'package:clean_arch_movie_app/core/presentation/storage.dart';
 import 'package:clean_arch_movie_app/features/auth/data/data_sources/auth_data_source.dart';
@@ -62,20 +60,23 @@ void main() {
         },
       );
       test(
-        "should return ServerException when the response code is 401",
+        "should return ServerException when the response code is 404",
         () async {
           //arrange
           when(mockDio.post(
             appConfig.apiUrl + path,
             data: {"email": "testsouma02@gmail.com", "password": "Aa123456", "user_type": "lab"},
-          )).thenThrow(ServerException());
+          )).thenAnswer(
+            (_) async => Response(
+                requestOptions: RequestOptions(path: appConfig.apiUrl + path),
+                data: {"message": "Not found", "code": 404},
+                statusCode: 404),
+          );
           //art
-          try {
-            await authRemoteDataSourceImpl.logIn(AuthParams("testsouma02@gmail.com", "Aa123456"));
-          } catch (e) {
-            //assert
-            expect(e, isA<ServerException>());
-          }
+          var result = authRemoteDataSourceImpl.logIn(AuthParams("testsouma02@gmail.com", "Aa123456"));
+          expect(result, throwsA(isA<ServerException>()));
+
+          //assert
         },
       );
     },
