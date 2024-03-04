@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
       await Storage.init();
     }
     //init any thing need await when start app here
-
+    bloc.validLoginBloc.add(OnChange(bloc.phoneL.text.isNotEmpty && bloc.passwordL.text.isNotEmpty));
     FlutterNativeSplash.remove();
   }
 
