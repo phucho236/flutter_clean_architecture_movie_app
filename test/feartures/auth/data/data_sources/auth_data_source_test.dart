@@ -53,9 +53,9 @@ void main() {
                 statusCode: 200),
           );
 
-          // //art
+          //act
           final result = await authRemoteDataSourceImpl.logIn(AuthParams("testsouma02@gmail.com", "Aa123456"));
-          // //assert
+          //assert
           expect(result, isA<LoginModel>());
         },
       );
@@ -72,11 +72,12 @@ void main() {
                 data: {"message": "Not found", "code": 404},
                 statusCode: 404),
           );
-          //art
+          //actual
+          // dont need await here nha
           var result = authRemoteDataSourceImpl.logIn(AuthParams("testsouma02@gmail.com", "Aa123456"));
-          expect(result, throwsA(isA<ServerException>()));
 
           //assert
+          expect(result, throwsA(isA<ServerException>()));
         },
       );
     },
