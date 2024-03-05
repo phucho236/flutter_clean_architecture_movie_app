@@ -9,6 +9,7 @@ import 'package:clean_arch_movie_app/core/presentation/widgets/app_text_feild.da
 import 'package:clean_arch_movie_app/core/presentation/widgets/spacing.dart';
 import 'package:clean_arch_movie_app/features/auth/domain/use_cases/login_use_case.dart';
 import 'package:clean_arch_movie_app/features/auth/presentation/manager/auth_bloc/auth_bloc.dart';
+import 'package:clean_arch_movie_app/features/list_item/items_page.dart';
 import 'package:clean_arch_movie_app/features/movies/presentation/pages/movies_page.dart';
 import 'package:clean_arch_movie_app/gen/assets.gen.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -52,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
               AppMessage().showToastMessage(state.failure?.message ?? "");
             }
             if (state is DataLoadedState) {
-              Navigator.pushReplacementNamed(context, MoviesPage.route);
+              Navigator.pushReplacementNamed(context, ItemsPage.route);
             }
           },
           bloc: bloc,

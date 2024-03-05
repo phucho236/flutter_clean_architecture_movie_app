@@ -18,12 +18,12 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
   @override
   Future<LoginModel> logIn(AuthParams params) async {
     return handleRemoteRequest(() async {
-      final result = await _dio.call(
-        DioParams(HttpMethod.POST,
-            endpoint: Endpoint.login,
-            body: {"email": "testsouma02@gmail.com", "password": "Aa123456", "user_type": "lab"},
-            needAuthrorize: false),
-      );
+      // final result = await _dio.call(
+      //   DioParams(HttpMethod.POST,
+      //       endpoint: Endpoint.login,
+      //       body: {"email": "testsouma02@gmail.com", "password": "Aa123456", "user_type": "lab"},
+      //       needAuthrorize: false),
+      // );
 
       await Future.delayed(const Duration(seconds: 1));
       return LoginModel.fromJson({"token": "this is token"});

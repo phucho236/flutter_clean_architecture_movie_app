@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class AppButton extends StatelessWidget {
   const AppButton({
     super.key,
-    required this.visible,
-    required this.isLoading,
+    this.visible = true,
+    this.isLoading = false,
     this.content = "",
     this.onTap,
   });
@@ -16,7 +16,7 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: visible || isLoading ? onTap : null,
+      onTap: visible || !isLoading ? onTap : null,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(9),
