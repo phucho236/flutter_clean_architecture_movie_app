@@ -160,15 +160,21 @@ class __PaginatedListViewState<T> extends State<_PaginatedListView<T>> {
                   bloc: fetchListBloc,
                   selector: (state) => state.paginationStatus,
                   builder: (context, paginationStatus) {
-                    if (paginationStatus.name == Status.failure.name) {
-                      return _infiniteListTheme.errorWidget!;
-                    }
-                    return Opacity(
-                      opacity: paginationStatus.name == Status.loading.name ? 1 : 0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _infiniteListTheme.loadingWidget!,
-                      ),
+                    return Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Opacity(
+                          opacity: paginationStatus.name == Status.loading.name ? 1 : 0,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: _infiniteListTheme.loadingWidget!,
+                          ),
+                        ),
+                        Opacity(
+                          opacity: paginationStatus.name == Status.failure.name ? 1 : 0,
+                          child: _infiniteListTheme.errorWidget,
+                        ),
+                      ],
                     );
                   },
                 );
