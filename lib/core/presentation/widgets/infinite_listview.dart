@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// [loadingWidget] to show when the next subsequent page is being fetched
 class InfiniteListTheme {
   InfiniteListTheme({
     this.paginationLoadingWidget,
@@ -18,12 +19,16 @@ class InfiniteListTheme {
   final Widget? emptyWidget;
   final Widget? loadingWidget;
 
-  /// loading widget to show when the next subsequent page is being fetched
   final Widget? paginationLoadingWidget;
 }
 
 // ignore: must_be_immutable
 class InfiniteListView<T> extends StatelessWidget {
+  ///[controller]If you use scrollcontroller param you have to dispose it yourself.<br />
+  ///[getItems] make the use_case return PagingEntity<T> <br />
+  ///ex: Future<Either<Failure, PagingEntity<ItemEntity>>> call(Param params) {
+  ///  return repo.getIntems(params);
+  ///}
   InfiniteListView({
     super.key,
     required this.itemBuilder,
@@ -31,7 +36,6 @@ class InfiniteListView<T> extends StatelessWidget {
     this.controller,
     Filter? filter,
     InfiniteListTheme? infiniteListTheme,
-    //
   }) : super() {
     infiniteListBloc = InfiniteListBloc<T>(getItems: getItems, filter: filter);
 
@@ -44,11 +48,10 @@ class InfiniteListView<T> extends StatelessWidget {
             paginationLoadingWidget: const LoadingWidget());
   }
 
-  // controller for the listview
   late ScrollController? controller;
   late InfiniteListTheme _infiniteListTheme;
 
-  // builder widget for the individual list item
+  /// [itemBuilder] widget for the individual list item
   final ItemWidgetBuilder<T> itemBuilder;
   late InfiniteListBloc<T> infiniteListBloc;
   Widget builder(BuildContext context, InfiniteListState state) {
@@ -132,7 +135,6 @@ class __PaginatedListViewState<T> extends State<_PaginatedListView<T>> {
 
   @override
   void dispose() {
-    // If you use scrollcontroller parram you have to dispose it yourself
     if (widget.controller == null) {
       _controller
         ..removeListener(_onScroll)

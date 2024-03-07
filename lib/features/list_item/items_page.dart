@@ -60,6 +60,7 @@ class _ItemsPageState extends State<ItemsPage> {
           // ),
           Expanded(
             child: InfiniteListView<String>(
+              controller: ScrollController(),
               getItems: fetchListItems,
               itemBuilder: (context, index, item) {
                 return Container(color: Colors.red, height: 200, child: Text(item + "123123"));
