@@ -6,11 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class InfiniteListBloc<T> extends Bloc<BaseEvent, InfiniteListState<T>> {
   InfiniteListBloc({
-    required this.fetchListItems,
+    required this.getItems,
     InfiniteListState<T>? initialState,
     Filter? filter,
   }) : super(initialState ?? InfiniteListState<T>(filter: filter)) {
-    on<OnFetchInfiniteList>((event, emit) async {
+    on<OnLoadInfiniteList>((event, emit) async {
       final newFilter = event.filter ?? state.filter;
       final reset = event.refresh || event.filter != null;
 
@@ -31,8 +31,7 @@ class InfiniteListBloc<T> extends Bloc<BaseEvent, InfiniteListState<T>> {
       }
 
       try {
-        // fetch the list
-        final fetchedList = await fetchListItems(page: state.nextPage, filter: newFilter);
+        final fetchedList = await getItems(page: state.nextPage, filter: newFilter);
 
         if (isClosed) return;
 
@@ -69,13 +68,13 @@ class InfiniteListBloc<T> extends Bloc<BaseEvent, InfiniteListState<T>> {
         }
       }
     }, transformer: droppable());
-    add(OnFetchInfiniteList(filter: filter));
+    add(OnLoadInfiniteList(filter: filter));
   }
 
   final Future<PagingEntity<T>> Function({
     required int page,
     Filter? filter,
-  }) fetchListItems;
+  }) getItems;
 }
 
 abstract class Filter {

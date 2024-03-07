@@ -60,7 +60,7 @@ class _ItemsPageState extends State<ItemsPage> {
           // ),
           Expanded(
             child: InfiniteListView<String>(
-              fetchListItems: fetchListItems,
+              getItems: fetchListItems,
               itemBuilder: (context, index, item) {
                 return Container(color: Colors.red, height: 200, child: Text(item + "123123"));
               },
@@ -136,19 +136,16 @@ class _ItemsPageState extends State<ItemsPage> {
 
   var page123 = 1;
   Future<PagingEntity<String>> fetchListItems({Filter? filter, required int page}) async {
-    print(page);
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     var data = List.generate(10, (index) => DateTime.now().millisecondsSinceEpoch.toString()).toList();
-    if (page != page123 - 1) {
-      page123 = 1;
-    }
 
     var value = PagingEntity(
       hasNext: page123 < 5,
-      nextPage: page123,
+      nextPage: page + 1,
       items: data,
     );
-    page123 = page123 + 1;
+    page123 = page + 1;
+    print('$page $page123');
     return value;
   }
 }

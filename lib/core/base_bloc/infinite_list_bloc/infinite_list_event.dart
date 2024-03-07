@@ -1,8 +1,8 @@
 import 'package:clean_arch_movie_app/core/base_bloc/base_event.dart';
 import 'package:clean_arch_movie_app/core/base_bloc/infinite_list_bloc/infinite_list_bloc.dart';
 
-class OnFetchInfiniteList extends BaseEvent {
-  OnFetchInfiniteList({this.refresh = false, this.filter});
+class OnLoadInfiniteList extends BaseEvent {
+  OnLoadInfiniteList({this.refresh = false, this.filter});
 
   /// whether to fetch the first page of the list (i.e. fetch the list from the start)
   final bool refresh;

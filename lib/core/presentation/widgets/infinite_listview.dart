@@ -1,44 +1,54 @@
 import 'package:clean_arch_movie_app/core/base_bloc/infinite_list_bloc/infinite_list_bloc.dart';
 import 'package:clean_arch_movie_app/core/base_bloc/infinite_list_bloc/infinite_list_event.dart';
 import 'package:clean_arch_movie_app/core/base_bloc/infinite_list_bloc/infinite_list_state.dart';
+import 'package:clean_arch_movie_app/core/presentation/widgets/loading_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// ignore: must_be_immutable
-class InfiniteListView<T> extends StatelessWidget {
-  InfiniteListView(
-      {super.key,
-      required this.itemBuilder,
-      required Future<PagingEntity<T>> Function({
-        required int page,
-        Filter? filter,
-      })
-          fetchListItems,
-      //Wrap here to Infinity Loading Theme
-      this.paginationLoadingWidget,
-      this.loadingWidget,
-      this.errorWidget,
-      this.emptyWidget,
-      this.controller,
-      Filter? filter
-      //
-      })
-      : super() {
-    infiniteListBloc = InfiniteListBloc<T>(fetchListItems: fetchListItems, filter: filter);
-    controller;
-  }
+class InfiniteListTheme {
+  InfiniteListTheme({
+    this.paginationLoadingWidget,
+    this.loadingWidget,
+    this.errorWidget,
+    this.emptyWidget,
+  });
 
   final Widget? errorWidget;
   final Widget? emptyWidget;
   final Widget? loadingWidget;
 
-  /// controller for the listview
-  late ScrollController? controller;
-
   /// loading widget to show when the next subsequent page is being fetched
   final Widget? paginationLoadingWidget;
+}
 
-  /// builder widget for the individual list item
+// ignore: must_be_immutable
+class InfiniteListView<T> extends StatelessWidget {
+  InfiniteListView({
+    super.key,
+    required this.itemBuilder,
+    required Future<PagingEntity<T>> Function({required int page, Filter? filter}) getItems,
+    this.controller,
+    Filter? filter,
+    InfiniteListTheme? infiniteListTheme,
+    //
+  }) : super() {
+    infiniteListBloc = InfiniteListBloc<T>(getItems: getItems, filter: filter);
+
+    _infiniteListTheme = infiniteListTheme ??
+        //Default
+        InfiniteListTheme(
+            loadingWidget: const LoadingWidget(),
+            errorWidget: Center(child: Text('an_error_has_occured'.tr())),
+            emptyWidget: const SizedBox.shrink(),
+            paginationLoadingWidget: const LoadingWidget());
+  }
+
+  // controller for the listview
+  late ScrollController? controller;
+  late InfiniteListTheme _infiniteListTheme;
+
+  // builder widget for the individual list item
   final ItemWidgetBuilder<T> itemBuilder;
   late InfiniteListBloc<T> infiniteListBloc;
   Widget builder(BuildContext context, InfiniteListState state) {
@@ -46,26 +56,20 @@ class InfiniteListView<T> extends StatelessWidget {
     // set all the default widgets for each state
     switch (state.status) {
       case Status.loading:
-        widget = loadingWidget ??
-            const Center(
-              child: CircularProgressIndicator(),
-            );
+        widget = _infiniteListTheme.loadingWidget!;
         break;
       case Status.success:
         widget = _PaginatedListView<T>(
             controller: controller,
             itemBuilder: itemBuilder,
-            paginationLoadingWidget: paginationLoadingWidget,
+            infiniteListTheme: _infiniteListTheme,
             infiniteListBloc: infiniteListBloc);
         break;
       case Status.empty:
-        widget = emptyWidget ??
-            const Center(
-              child: CircularProgressIndicator(),
-            );
+        widget = _infiniteListTheme.emptyWidget!;
         break;
       case Status.failure:
-        widget = errorWidget ?? const SizedBox();
+        widget = _infiniteListTheme.errorWidget!;
         break;
     }
 
@@ -88,13 +92,13 @@ class _PaginatedListView<T> extends StatefulWidget {
   const _PaginatedListView({
     super.key,
     required this.itemBuilder,
-    this.paginationLoadingWidget,
     this.controller,
     required this.infiniteListBloc,
+    required this.infiniteListTheme,
   });
 
   final ScrollController? controller;
-  final Widget? paginationLoadingWidget;
+  final InfiniteListTheme infiniteListTheme;
   final ItemWidgetBuilder<T> itemBuilder;
   final InfiniteListBloc<T> infiniteListBloc;
 
@@ -104,36 +108,36 @@ class _PaginatedListView<T> extends StatefulWidget {
 
 class __PaginatedListViewState<T> extends State<_PaginatedListView<T>> {
   late final InfiniteListBloc<T> fetchListBloc;
-  ScrollController? _controller;
-
+  late ScrollController _controller;
+  late InfiniteListTheme _infiniteListTheme;
   void _onScroll() {
-    if (_controller?.hasClients == true &&
-        _controller?.position.maxScrollExtent == _controller?.offset &&
+    if (_controller.hasClients == true &&
+        _controller.position.maxScrollExtent == _controller.offset &&
         fetchListBloc.state.hasNext &&
         fetchListBloc.state.paginationStatus != Status.loading &&
         // if an error occurs in pagination then stop further pagination calls
         fetchListBloc.state.error == null) {
-      fetchListBloc.add(OnFetchInfiniteList());
+      fetchListBloc.add(OnLoadInfiniteList());
     }
   }
 
   @override
   void initState() {
     super.initState();
+    _infiniteListTheme = widget.infiniteListTheme;
     fetchListBloc = widget.infiniteListBloc;
     _controller = widget.controller ?? ScrollController();
-    _controller?.addListener(_onScroll);
+    _controller.addListener(_onScroll);
   }
 
   @override
   void dispose() {
-    if (_controller != null) {
-      _controller!
+    // If you use scrollcontroller parram you have to dispose it yourself
+    if (widget.controller == null) {
+      _controller
         ..removeListener(_onScroll)
         ..dispose();
     }
-
-    _controller = null;
     super.dispose();
   }
 
@@ -144,7 +148,7 @@ class __PaginatedListViewState<T> extends State<_PaginatedListView<T>> {
       selector: (state) => state.items.length,
       builder: (context, length) {
         return RefreshIndicator(
-          onRefresh: () async => fetchListBloc.add(OnFetchInfiniteList(refresh: true)),
+          onRefresh: () async => fetchListBloc.add(OnLoadInfiniteList(refresh: true)),
           child: ListView.builder(
             itemCount: length + 1,
             controller: _controller,
@@ -156,22 +160,16 @@ class __PaginatedListViewState<T> extends State<_PaginatedListView<T>> {
                   bloc: fetchListBloc,
                   selector: (state) => state.paginationStatus,
                   builder: (context, paginationStatus) {
+                    if (paginationStatus.name == Status.failure.name) {
+                      return _infiniteListTheme.errorWidget!;
+                    }
                     return Opacity(
                       opacity: paginationStatus.name == Status.loading.name ? 1 : 0,
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Center(child: CircularProgressIndicator()),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: _infiniteListTheme.loadingWidget!,
                       ),
                     );
-
-                    // switch (paginationStatus) {
-                    //   case Status.loading:
-                    //     return Center(child: const CircularProgressIndicator());
-                    // case Status.failure:
-                    //   return const SizedBox();
-                    // default:
-                    //   return const SizedBox.shrink();
-                    //}
                   },
                 );
               }
