@@ -1,6 +1,7 @@
 import 'package:clean_arch_movie_app/core/base_bloc/infinite_list_bloc/infinite_list_bloc.dart';
 import 'package:clean_arch_movie_app/core/base_bloc/infinite_list_bloc/infinite_list_event.dart';
 import 'package:clean_arch_movie_app/core/base_bloc/infinite_list_bloc/infinite_list_state.dart';
+import 'package:clean_arch_movie_app/core/presentation/widgets/app_refresh_indicator.dart';
 import 'package:clean_arch_movie_app/core/presentation/widgets/loading_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -145,13 +146,14 @@ class __PaginatedListViewState<T> extends State<_PaginatedListView<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<InfiniteListBloc<T>, InfiniteListState<T>, int>(
-      bloc: fetchListBloc,
-      selector: (state) => state.items.length,
-      builder: (context, length) {
-        return RefreshIndicator(
-          onRefresh: () async => fetchListBloc.add(OnLoadInfiniteList(refresh: true)),
-          child: ListView.builder(
+    return AppRefreshIndicator(
+      onRefresh: () async => fetchListBloc.add(OnLoadInfiniteList(refresh: true)),
+      child: BlocSelector<InfiniteListBloc<T>, InfiniteListState<T>, int>(
+        bloc: fetchListBloc,
+        selector: (state) => state.items.length,
+        builder: (context, length) {
+          return ListView.builder(
+            padding: EdgeInsets.zero,
             itemCount: length + 1,
             controller: _controller,
             physics: const AlwaysScrollableScrollPhysics(),
@@ -188,9 +190,9 @@ class __PaginatedListViewState<T> extends State<_PaginatedListView<T>> {
                 fetchListBloc.state.items[index],
               );
             },
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
