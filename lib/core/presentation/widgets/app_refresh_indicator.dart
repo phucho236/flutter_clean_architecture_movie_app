@@ -212,15 +212,12 @@ class AppRefreshIndicator extends StatefulWidget {
 class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerProviderStateMixin<AppRefreshIndicator> {
   late AnimationController _positionController;
   late Animation<double> _positionFactor;
-  late Animation<double> _value;
-  late Animation<Color?> _valueColor;
 
   _RefreshIndicatorMode? _mode;
   late Future<void> _pendingRefreshFuture;
   bool? _isIndicatorAtTop;
   double? _dragOffset;
 
-  static final Animatable<double> _threeQuarterTween = Tween<double>(begin: 0.0, end: 0.75);
   static final Animatable<double> _kDragSizeFactorLimitTween = Tween<double>(begin: 0.0, end: _kDragSizeFactorLimit);
 
   @override
@@ -228,38 +225,6 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
     super.initState();
     _positionController = AnimationController(vsync: this);
     _positionFactor = _positionController.drive(_kDragSizeFactorLimitTween);
-    _value =
-        _positionController.drive(_threeQuarterTween); // The "value" of the circular progress indicator during a drag.
-  }
-
-  @override
-  void didChangeDependencies() {
-    final ThemeData theme = Theme.of(context);
-    _valueColor = _positionController.drive(
-      ColorTween(
-        begin: (widget.color ?? theme.colorScheme.primary).withOpacity(0.0),
-        end: (widget.color ?? theme.colorScheme.primary).withOpacity(1.0),
-      ).chain(CurveTween(
-        curve: const Interval(0.0, 1.0 / _kDragSizeFactorLimit),
-      )),
-    );
-    super.didChangeDependencies();
-  }
-
-  @override
-  void didUpdateWidget(covariant AppRefreshIndicator oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.color != widget.color) {
-      final ThemeData theme = Theme.of(context);
-      _valueColor = _positionController.drive(
-        ColorTween(
-          begin: (widget.color ?? theme.colorScheme.primary).withOpacity(0.0),
-          end: (widget.color ?? theme.colorScheme.primary).withOpacity(1.0),
-        ).chain(CurveTween(
-          curve: const Interval(0.0, 1.0 / _kDragSizeFactorLimit),
-        )),
-      );
-    }
   }
 
   @override
@@ -308,18 +273,17 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
         _dismiss(_RefreshIndicatorMode.canceled);
       }
     } else if (notification is ScrollUpdateNotification) {
-      if (_mode == _RefreshIndicatorMode.drag || _mode == _RefreshIndicatorMode.armed) {
-        if ((notification.metrics.axisDirection == AxisDirection.down && notification.metrics.extentBefore > 0.0) ||
-            (notification.metrics.axisDirection == AxisDirection.up && notification.metrics.extentAfter > 0.0)) {
-          _dismiss(_RefreshIndicatorMode.canceled);
-        } else {
-          if (notification.metrics.axisDirection == AxisDirection.down) {
-            _dragOffset = _dragOffset! - notification.scrollDelta!;
-          } else if (notification.metrics.axisDirection == AxisDirection.up) {
-            _dragOffset = _dragOffset! + notification.scrollDelta!;
-          }
-          _checkDragOffset(notification.metrics.viewportDimension);
+      if (_mode == _RefreshIndicatorMode.drag ||
+          _mode == _RefreshIndicatorMode.armed ||
+          _mode == _RefreshIndicatorMode.canceled) {
+        if (notification.metrics.axisDirection == AxisDirection.down) {
+          _dragOffset = _dragOffset! - notification.scrollDelta!;
+          _mode = _RefreshIndicatorMode.canceled;
+        } else if (notification.metrics.axisDirection == AxisDirection.up) {
+          _dragOffset = _dragOffset! + notification.scrollDelta!;
+          _mode = _RefreshIndicatorMode.drag;
         }
+        _checkDragOffset(notification.metrics.viewportDimension);
       }
       if (_mode == _RefreshIndicatorMode.armed && notification.dragDetails == null) {
         // On iOS start the refresh when the Scrollable bounces back from the
@@ -328,9 +292,14 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
         _show();
       }
     } else if (notification is OverscrollNotification) {
-      if (_mode == _RefreshIndicatorMode.drag || _mode == _RefreshIndicatorMode.armed) {
+      if (_mode == _RefreshIndicatorMode.drag ||
+          _mode == _RefreshIndicatorMode.armed ||
+          _mode == _RefreshIndicatorMode.canceled) {
         if (notification.metrics.axisDirection == AxisDirection.down) {
           _dragOffset = _dragOffset! - notification.overscroll;
+          if (_mode == _RefreshIndicatorMode.canceled) {
+            _mode = _RefreshIndicatorMode.drag;
+          }
         } else if (notification.metrics.axisDirection == AxisDirection.up) {
           _dragOffset = _dragOffset! + notification.overscroll;
         }
@@ -342,9 +311,9 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
           _show();
           break;
         case _RefreshIndicatorMode.drag:
+        case _RefreshIndicatorMode.canceled:
           _dismiss(_RefreshIndicatorMode.canceled);
           break;
-        case _RefreshIndicatorMode.canceled:
         case _RefreshIndicatorMode.done:
         case _RefreshIndicatorMode.refresh:
         case _RefreshIndicatorMode.snap:
@@ -388,20 +357,25 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
   }
 
   void _checkDragOffset(double containerExtent) {
-    assert(_mode == _RefreshIndicatorMode.drag || _mode == _RefreshIndicatorMode.armed);
+    assert(_mode == _RefreshIndicatorMode.drag ||
+        _mode == _RefreshIndicatorMode.armed ||
+        _mode == _RefreshIndicatorMode.canceled);
     double newValue = _dragOffset! / (containerExtent * _kDragContainerExtentPercentage);
-    if (_mode == _RefreshIndicatorMode.armed) {
-      newValue = math.max(newValue, 1.0 / _kDragSizeFactorLimit);
-    }
     _positionController.value = clampDouble(newValue, 0.0, 1.0); // this triggers various rebuilds
-    if (_mode == _RefreshIndicatorMode.drag && _valueColor.value!.alpha == 0xFF) {
-      _mode = _RefreshIndicatorMode.armed;
+
+    // if open 30% will start refresh
+    if (_positionController.value > 0.3) {
+      if (_mode == _RefreshIndicatorMode.drag) {
+        _mode = _RefreshIndicatorMode.armed;
+      }
     }
   }
 
   // Stop showing the refresh indicator.
   Future<void> _dismiss(_RefreshIndicatorMode newMode) async {
     await Future<void>.value();
+    await _positionController.animateTo(0.0, duration: _kIndicatorSnapDuration);
+
     // This can only be called from _show() when refreshing and
     // _handleScrollNotification in response to a ScrollEndNotification or
     // direction change.
@@ -409,19 +383,7 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
     setState(() {
       _mode = newMode;
     });
-    switch (_mode!) {
-      case _RefreshIndicatorMode.done:
-        //await _positionController.animateTo(0.0, duration: _kIndicatorScaleDuration);
-        break;
-      case _RefreshIndicatorMode.canceled:
-        await _positionController.animateTo(0.0, duration: _kIndicatorScaleDuration);
-        break;
-      case _RefreshIndicatorMode.armed:
-      case _RefreshIndicatorMode.drag:
-      case _RefreshIndicatorMode.refresh:
-      case _RefreshIndicatorMode.snap:
-        assert(false);
-    }
+
     if (mounted && _mode == newMode) {
       _dragOffset = null;
       _isIndicatorAtTop = null;

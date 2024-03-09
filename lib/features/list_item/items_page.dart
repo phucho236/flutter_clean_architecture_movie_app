@@ -146,7 +146,6 @@ class _ItemsPageState extends State<ItemsPage> {
       items: data,
     );
     page123 = page + 1;
-    print('$page $page123');
     return value;
   }
 }
