@@ -217,6 +217,7 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
   late Future<void> _pendingRefreshFuture;
   bool? _isIndicatorAtTop;
   double? _dragOffset;
+  double? _oldPosition;
 
   static final Animatable<double> _kDragSizeFactorLimitTween = Tween<double>(begin: 0.0, end: _kDragSizeFactorLimit);
 
@@ -246,6 +247,8 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
         _mode == null &&
         _start(notification.metrics.axisDirection);
   }
+
+  double oldscrollDelta = 0;
 
   bool _handleScrollNotification(ScrollNotification notification) {
     if (!widget.notificationPredicate(notification)) {
@@ -279,10 +282,11 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
         if (notification.metrics.axisDirection == AxisDirection.down) {
           _dragOffset = _dragOffset! - notification.scrollDelta!;
           _mode = _RefreshIndicatorMode.canceled;
-        } else if (notification.metrics.axisDirection == AxisDirection.up) {
-          _dragOffset = _dragOffset! + notification.scrollDelta!;
-          _mode = _RefreshIndicatorMode.drag;
         }
+        //  else if (notification.metrics.axisDirection == AxisDirection.up) {
+        //   _dragOffset = _dragOffset! + notification.scrollDelta!;
+        //   _mode = _RefreshIndicatorMode.drag;
+        // }
         _checkDragOffset(notification.metrics.viewportDimension);
       }
       if (_mode == _RefreshIndicatorMode.armed && notification.dragDetails == null) {
@@ -300,9 +304,11 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
           if (_mode == _RefreshIndicatorMode.canceled) {
             _mode = _RefreshIndicatorMode.drag;
           }
-        } else if (notification.metrics.axisDirection == AxisDirection.up) {
-          _dragOffset = _dragOffset! + notification.overscroll;
         }
+        // else if (notification.metrics.axisDirection == AxisDirection.up) {
+        //   _dragOffset = _dragOffset! + notification.overscroll;
+        //   _mode = _RefreshIndicatorMode.canceled;
+        // }
         _checkDragOffset(notification.metrics.viewportDimension);
       }
     } else if (notification is ScrollEndNotification) {
@@ -353,6 +359,8 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
     }
     _dragOffset = 0.0;
     _positionController.value = 0.0;
+    _oldPosition = null;
+
     return true;
   }
 
@@ -360,9 +368,13 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
     assert(_mode == _RefreshIndicatorMode.drag ||
         _mode == _RefreshIndicatorMode.armed ||
         _mode == _RefreshIndicatorMode.canceled);
-    double newValue = _dragOffset! / (containerExtent * _kDragContainerExtentPercentage);
-    _positionController.value = clampDouble(newValue, 0.0, 1.0); // this triggers various rebuilds
 
+    double newValue = _dragOffset! / (containerExtent * _kDragContainerExtentPercentage);
+    if (_oldPosition != null) {
+      _positionController.value =
+          clampDouble(_positionController.value - (_oldPosition! - newValue), 0.0, 1); // this triggers various rebuilds
+    }
+    _oldPosition = newValue;
     // if open 30% will start refresh
     if (_positionController.value > 0.3) {
       if (_mode == _RefreshIndicatorMode.drag) {
@@ -473,9 +485,10 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
 
     return Column(
       children: <Widget>[
-        if (_mode != null)
-          SizeTransition(
-            axisAlignment: _isIndicatorAtTop! ? 1.0 : -1.0,
+        Opacity(
+          opacity: _mode != null ? 1 : 0,
+          child: SizeTransition(
+            axisAlignment: _isIndicatorAtTop == true ? 1.0 : -1.0,
             sizeFactor: _positionFactor, // this is what brings it down
             child: AnimatedBuilder(
                 animation: _positionController,
@@ -492,6 +505,7 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
                   );
                 }),
           ),
+        ),
         Expanded(child: child),
       ],
     );
