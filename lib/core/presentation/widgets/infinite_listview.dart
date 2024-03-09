@@ -147,6 +147,7 @@ class __PaginatedListViewState<T> extends State<_PaginatedListView<T>> {
   @override
   Widget build(BuildContext context) {
     return AppRefreshIndicator(
+      scrollController: _controller,
       onRefresh: () async => fetchListBloc.add(OnLoadInfiniteList(refresh: true)),
       child: BlocSelector<InfiniteListBloc<T>, InfiniteListState<T>, int>(
         bloc: fetchListBloc,

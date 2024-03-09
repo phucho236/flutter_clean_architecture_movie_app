@@ -3,8 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:math' as math;
-
 import 'package:flutter/foundation.dart' show clampDouble;
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
@@ -128,6 +126,7 @@ class AppRefreshIndicator extends StatefulWidget {
     this.notificationPredicate = defaultScrollNotificationPredicate,
     this.strokeWidth = RefreshProgressIndicator.defaultStrokeWidth,
     this.triggerMode = RefreshIndicatorTriggerMode.onEdge,
+    required this.scrollController,
   });
 
   /// The widget below this widget in the tree.
@@ -137,6 +136,7 @@ class AppRefreshIndicator extends StatefulWidget {
   ///
   /// Typically a [ListView] or [CustomScrollView].
   final Widget child;
+  final ScrollController scrollController;
 
   /// The distance from the child's top or bottom [edgeOffset] where
   /// the refresh indicator will settle. During the drag that exposes the refresh
@@ -218,7 +218,6 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
   bool? _isIndicatorAtTop;
   double? _dragOffset;
   double? _oldPosition;
-
   static final Animatable<double> _kDragSizeFactorLimitTween = Tween<double>(begin: 0.0, end: _kDragSizeFactorLimit);
 
   @override
@@ -370,6 +369,7 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
         _mode == _RefreshIndicatorMode.canceled);
 
     double newValue = _dragOffset! / (containerExtent * _kDragContainerExtentPercentage);
+    print(containerExtent);
     if (_oldPosition != null) {
       _positionController.value =
           clampDouble(_positionController.value - (_oldPosition! - newValue), 0.0, 1); // this triggers various rebuilds
@@ -403,6 +403,7 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
         _mode = null;
       });
     }
+    widget.scrollController.animateTo(0, curve: Curves.bounceIn, duration: const Duration(microseconds: 1));
   }
 
   void _show() async {
