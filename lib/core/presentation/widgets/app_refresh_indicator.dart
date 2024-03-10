@@ -19,10 +19,6 @@ const double _kDragSizeFactorLimit = 1.5;
 // to the RefreshIndicator's displacement.
 const Duration _kIndicatorSnapDuration = Duration(milliseconds: 150);
 
-// The duration of the ScaleTransition that starts when the refresh action
-// has completed.
-const Duration _kIndicatorScaleDuration = Duration(milliseconds: 200);
-
 /// The signature for a function that's called when the user has dragged a
 /// [RefreshIndicator] far enough to demonstrate that they want the app to
 /// refresh. The returned [Future] must complete when the refresh operation is
@@ -121,10 +117,8 @@ class AppRefreshIndicator extends StatefulWidget {
     this.displacement = 40.0,
     this.edgeOffset = 0.0,
     required this.onRefresh,
-    this.color,
     this.backgroundColor,
     this.notificationPredicate = defaultScrollNotificationPredicate,
-    this.strokeWidth = RefreshProgressIndicator.defaultStrokeWidth,
     this.triggerMode = RefreshIndicatorTriggerMode.onEdge,
     required this.scrollController,
   });
@@ -168,10 +162,6 @@ class AppRefreshIndicator extends StatefulWidget {
   /// [Future] must complete when the refresh operation is finished.
   final RefreshCallback onRefresh;
 
-  /// The progress indicator's foreground color. The current theme's
-  /// [ColorScheme.primary] by default.
-  final Color? color;
-
   /// The progress indicator's background color. The current theme's
   /// [ThemeData.canvasColor] by default.
   final Color? backgroundColor;
@@ -182,11 +172,6 @@ class AppRefreshIndicator extends StatefulWidget {
   /// By default, checks whether `notification.depth == 0`. Set it to something
   /// else for more complicated layouts.
   final ScrollNotificationPredicate notificationPredicate;
-
-  /// Defines [strokeWidth] for `RefreshIndicator`.
-  ///
-  /// By default, the value of [strokeWidth] is 2.0 pixels.
-  final double strokeWidth;
 
   /// Defines how this [RefreshIndicator] can be triggered when users overscroll.
   ///
@@ -369,7 +354,6 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
         _mode == _RefreshIndicatorMode.canceled);
 
     double newValue = _dragOffset! / (containerExtent * _kDragContainerExtentPercentage);
-    print(containerExtent);
     if (_oldPosition != null) {
       _positionController.value =
           clampDouble(_positionController.value - (_oldPosition! - newValue), 0.0, 1); // this triggers various rebuilds
@@ -416,10 +400,10 @@ class AppRefreshIndicatorState extends State<AppRefreshIndicator> with TickerPro
     await _positionController.animateTo(1.0 / _kDragSizeFactorLimit, duration: _kIndicatorSnapDuration);
     // play anim
     _bump?.value = true;
-    // waiting plat done anim
+    // waiting play done anim
     await Future.delayed(const Duration(seconds: 2));
     // hide anim
-    await _positionController.animateTo(0.0, duration: _kIndicatorScaleDuration);
+    await _positionController.animateTo(0.0, duration: _kIndicatorSnapDuration);
     if (mounted && _mode == _RefreshIndicatorMode.snap) {
       setState(() {
         // Show the indeterminate progress indicator.
