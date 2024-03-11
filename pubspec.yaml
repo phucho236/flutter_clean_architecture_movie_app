@@ -26,6 +26,9 @@ dependencies:
   easy_localization: ^3.0.1
   mockito: ^5.4.0
   rive: ^0.13.0
+  rive_pull_to_refresh:
+    git:
+      url: https://github.com/phucho236/RivePullToRefresh.git
 
 dev_dependencies:
   build_runner:

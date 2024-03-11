@@ -1,11 +1,12 @@
 import 'package:clean_arch_movie_app/core/base_bloc/infinite_list_bloc/infinite_list_bloc.dart';
 import 'package:clean_arch_movie_app/core/base_bloc/infinite_list_bloc/infinite_list_event.dart';
 import 'package:clean_arch_movie_app/core/base_bloc/infinite_list_bloc/infinite_list_state.dart';
-import 'package:clean_arch_movie_app/core/presentation/widgets/app_refresh_indicator.dart';
 import 'package:clean_arch_movie_app/core/presentation/widgets/loading_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rive/rive.dart';
+import 'package:rive_pull_to_refresh/rive_pull_to_refresh.dart';
 
 /// [loadingWidget] to show when the next subsequent page is being fetched
 class InfiniteListTheme {
@@ -114,6 +115,8 @@ class __PaginatedListViewState<T> extends State<_PaginatedListView<T>> {
   late final InfiniteListBloc<T> fetchListBloc;
   late ScrollController _controller;
   late InfiniteListTheme _infiniteListTheme;
+  SMIBool? _bump;
+  SMINumber? _smiNumber;
   void _onScroll() {
     if (_controller.hasClients == true &&
         _controller.position.maxScrollExtent == _controller.offset &&
@@ -146,8 +149,22 @@ class __PaginatedListViewState<T> extends State<_PaginatedListView<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return AppRefreshIndicator(
-      scrollController: _controller,
+    return RivePullToRefresh(
+      style: RivePullToRefreshStyle.header,
+      bump: (value) {
+        _bump?.value = value;
+      },
+      callBacknumber: (number) {
+        _smiNumber?.value = number;
+      },
+      riveWidget: SizedBox(
+        height: 100,
+        child: RiveAnimation.asset(
+          'assets/rives/pullrf.riv',
+          onInit: _onRiveInit,
+        ),
+      ),
+      controller: _controller,
       onRefresh: () async => fetchListBloc.add(OnLoadInfiniteList(refresh: true)),
       child: BlocSelector<InfiniteListBloc<T>, InfiniteListState<T>, int>(
         bloc: fetchListBloc,
@@ -195,5 +212,14 @@ class __PaginatedListViewState<T> extends State<_PaginatedListView<T>> {
         },
       ),
     );
+  }
+
+  void _onRiveInit(Artboard artboard) {
+    final controller = StateMachineController.fromArtboard(artboard, "State Machine");
+    artboard.addController(controller!);
+
+    _bump = controller.findInput<bool>("Active") as SMIBool;
+
+    _smiNumber = controller.findInput<double>("NumStart") as SMINumber;
   }
 }

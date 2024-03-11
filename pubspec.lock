@@ -813,6 +813,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.2"
+  rive_pull_to_refresh:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: fadfae6174c7c2d8c447564b30d1faa743e8432b
+      url: "https://github.com/phucho236/RivePullToRefresh.git"
+    source: git
+    version: "0.0.1"
   rxdart:
     dependency: "direct main"
     description:
@@ -1163,5 +1172,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=2.19.0 <3.0.0"
+  dart: ">=2.19.6 <3.0.0"
   flutter: ">=3.7.0"
