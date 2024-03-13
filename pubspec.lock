@@ -818,7 +818,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: fadfae6174c7c2d8c447564b30d1faa743e8432b
+      resolved-ref: b18a6b8d98cdae3873fadf568a0116f7745e7ffd
       url: "https://github.com/phucho236/RivePullToRefresh.git"
     source: git
     version: "0.0.1"

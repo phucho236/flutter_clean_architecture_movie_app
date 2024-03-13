@@ -57,6 +57,8 @@ class InfiniteListBloc<T> extends Bloc<BaseEvent, InfiniteListState<T>> {
             items: reset ? fetchedList.items : state.items + fetchedList.items,
           ),
         );
+
+        event.onDone?.call();
       } catch (error) {
         // update the state as error
         if (state.items.isEmpty || reset) {
