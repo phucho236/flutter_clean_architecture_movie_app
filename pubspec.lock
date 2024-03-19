@@ -818,10 +818,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: b18a6b8d98cdae3873fadf568a0116f7745e7ffd
+      resolved-ref: "139fa250fe5c8a4bb3c31ccbfe148b6cb3982ab0"
       url: "https://github.com/phucho236/RivePullToRefresh.git"
     source: git
-    version: "0.0.1"
+    version: "1.0.0"
   rxdart:
     dependency: "direct main"
     description:

@@ -115,12 +115,9 @@ class InfiniteListView<T> extends StatelessWidget {
       callBacknumber: (number) {
         _smiNumber?.value = number;
       },
-      riveWidget: SizedBox(
-        height: 100,
-        child: RiveAnimation.asset(
-          'assets/rives/pullrf.riv',
-          onInit: _onRiveInit,
-        ),
+      riveWidget: RiveAnimation.asset(
+        'assets/rives/pullrf.riv',
+        onInit: _onRiveInit,
       ),
       controller: controller,
       onRefresh: () async {
@@ -133,6 +130,7 @@ class InfiniteListView<T> extends StatelessWidget {
             }));
         return await completer.future;
       },
+      height: 100,
       child: BlocBuilder<InfiniteListBloc, InfiniteListState>(bloc: infiniteListBloc, builder: builder),
     );
   }
