@@ -137,7 +137,7 @@ class _ItemsPageState extends State<ItemsPage> {
 
   var page123 = 1;
   Future<PagingEntity<String>> fetchListItems({Filter? filter, required int page}) async {
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 3));
     var data = List.generate(10, (index) => DateTime.now().millisecondsSinceEpoch.toString()).toList();
 
     var value = PagingEntity(

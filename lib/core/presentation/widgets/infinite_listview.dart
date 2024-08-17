@@ -90,6 +90,7 @@ class InfiniteListView<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RivePullToRefresh(
+      height: 100,
       onInit: (controller) {
         _rivePullToRefreshController = controller;
       },
@@ -112,11 +113,11 @@ class InfiniteListView<T> extends StatelessWidget {
 
         //TimeStartAnim
       },
-      callBacknumber: (number) {
+      callBackNumber: (number) {
         _smiNumber?.value = number;
       },
       riveWidget: SizedBox(
-        height: 100,
+        height: 50,
         child: RiveAnimation.asset(
           'assets/rives/pullrf.riv',
           onInit: _onRiveInit,
