@@ -36,7 +36,9 @@ class InfiniteListView<T> extends StatelessWidget {
   InfiniteListView({
     super.key,
     required this.itemBuilder,
-    required Future<PagingEntity<T>> Function({required int page, Filter? filter}) getItems,
+    required Future<PagingEntity<T>> Function(
+            {required int page, Filter? filter})
+        getItems,
     this.controller,
     Filter? filter,
     InfiniteListTheme? infiniteListTheme,
@@ -90,6 +92,7 @@ class InfiniteListView<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RivePullToRefresh(
+      height: 100,
       onInit: (controller) {
         _rivePullToRefreshController = controller;
       },
@@ -112,12 +115,15 @@ class InfiniteListView<T> extends StatelessWidget {
 
         //TimeStartAnim
       },
-      callBacknumber: (number) {
+      callBackNumber: (number) {
         _smiNumber?.value = number;
       },
-      riveWidget: RiveAnimation.asset(
-        'assets/rives/pullrf.riv',
-        onInit: _onRiveInit,
+      riveWidget: SizedBox(
+        height: 50,
+        child: RiveAnimation.asset(
+          'assets/rives/pullrf.riv',
+          onInit: _onRiveInit,
+        ),
       ),
       controller: controller,
       onRefresh: () async {
@@ -131,12 +137,14 @@ class InfiniteListView<T> extends StatelessWidget {
         return await completer.future;
       },
       height: 100,
-      child: BlocBuilder<InfiniteListBloc, InfiniteListState>(bloc: infiniteListBloc, builder: builder),
+      child: BlocBuilder<InfiniteListBloc, InfiniteListState>(
+          bloc: infiniteListBloc, builder: builder),
     );
   }
 
   void _onRiveInit(Artboard artboard) {
-    final controller = StateMachineController.fromArtboard(artboard, "State Machine");
+    final controller =
+        StateMachineController.fromArtboard(artboard, "State Machine");
     artboard.addController(controller!);
 
     _bump = controller.findInput<bool>("Active") as SMIBool;
@@ -218,7 +226,8 @@ class __PaginatedListViewState<T> extends State<_PaginatedListView<T>> {
           itemBuilder: (context, index) {
             // show the pagination status indicators on the last index
             if (index == length) {
-              return BlocSelector<InfiniteListBloc<T>, InfiniteListState<T>, Status>(
+              return BlocSelector<InfiniteListBloc<T>, InfiniteListState<T>,
+                  Status>(
                 bloc: fetchListBloc,
                 selector: (state) => state.paginationStatus,
                 builder: (context, paginationStatus) {
@@ -226,14 +235,18 @@ class __PaginatedListViewState<T> extends State<_PaginatedListView<T>> {
                     alignment: Alignment.center,
                     children: [
                       Opacity(
-                        opacity: paginationStatus.name == Status.loading.name ? 1 : 0,
+                        opacity: paginationStatus.name == Status.loading.name
+                            ? 1
+                            : 0,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: _infiniteListTheme.loadingWidget!,
                         ),
                       ),
                       Opacity(
-                        opacity: paginationStatus.name == Status.failure.name ? 1 : 0,
+                        opacity: paginationStatus.name == Status.failure.name
+                            ? 1
+                            : 0,
                         child: _infiniteListTheme.errorWidget,
                       ),
                     ],
