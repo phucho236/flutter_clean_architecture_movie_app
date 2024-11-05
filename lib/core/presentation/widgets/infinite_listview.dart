@@ -136,7 +136,6 @@ class InfiniteListView<T> extends StatelessWidget {
             }));
         return await completer.future;
       },
-      height: 100,
       child: BlocBuilder<InfiniteListBloc, InfiniteListState>(
           bloc: infiniteListBloc, builder: builder),
     );

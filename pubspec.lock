@@ -816,12 +816,11 @@ packages:
   rive_pull_to_refresh:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "139fa250fe5c8a4bb3c31ccbfe148b6cb3982ab0"
-      url: "https://github.com/phucho236/RivePullToRefresh.git"
-    source: git
-    version: "1.0.0"
+      name: rive_pull_to_refresh
+      sha256: "0fca9bd60ade59ab6cb2fa4222fbfe8377bf609a2aef3d5de76ebaad0502ccac"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4+6"
   rxdart:
     dependency: "direct main"
     description:
