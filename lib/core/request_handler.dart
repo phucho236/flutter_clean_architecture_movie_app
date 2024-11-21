@@ -11,8 +11,8 @@ Future<T> handleRemoteRequest<T>(Future<T> Function() onRequest) async {
   try {
     var value = await onRequest();
     return value;
-  } on DioError catch (e) {
-    if (e.type == DioErrorType.connectTimeout) {
+  } on DioException catch (e) {
+    if (e.type == DioExceptionType.connectionTimeout) {
       throw NetWorkException(NetworkFailure(message: 'connection_timeout'.tr()));
     }
     throw ServerException(message: 'an_error_has_occured'.tr());
@@ -44,8 +44,12 @@ Future<Either<Failure, T>> handleRepositoryCall<T>(NetworkInfo networkInfo,
   }
 }
 
-handleEither<B, T extends Failure, S>(Either<T, S> either, B Function(S r) onResult,
-    {bool shouldHandleError = true, Function()? onError, bool? shouldUseDefaultError, String? defaultError}) {
+handleEither<B, T extends Failure, S>(
+    Either<T, S> either, B Function(S r) onResult,
+    {bool shouldHandleError = true,
+    Function()? onError,
+    bool? shouldUseDefaultError,
+    String? defaultError}) {
   either.fold((l) {
     if (onError != null) {
       onError();
@@ -60,7 +64,9 @@ handleEither<B, T extends Failure, S>(Either<T, S> either, B Function(S r) onRes
   }, onResult);
 }
 
-handleEitherReturn<B, T extends Failure, S>(Either<T, S> either, B Function(S r) onResult, {Function()? onError}) {
+handleEitherReturn<B, T extends Failure, S>(
+    Either<T, S> either, B Function(S r) onResult,
+    {Function()? onError}) {
   return either.fold((l) {
     handleError(l.message ?? "");
     if (onError != null) {
@@ -74,7 +80,8 @@ Future handleError(String message, {bool shouldUseDefaultError = true}) async {
     // because test getit dont init so Thinking to much about injection this AppMessage to all bloc ?
     AppMessage().showToastMessage(
       ErrorHandler.parse(message,
-              shouldUseDefaultError: shouldUseDefaultError, defaultError: shouldUseDefaultError ? message : null) ??
+              shouldUseDefaultError: shouldUseDefaultError,
+              defaultError: shouldUseDefaultError ? message : null) ??
           message,
     );
   } catch (e) {

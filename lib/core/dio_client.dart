@@ -81,8 +81,8 @@ class DioClient {
         validateStatus: (statusCode) {
           return statusCode! <= 1000;
         },
-        connectTimeout: _appConfig.secondsTimeout * 1000,
-        receiveTimeout: _appConfig.secondsTimeout * 1000,
+        connectTimeout: Duration(seconds: _appConfig.secondsTimeout),
+        receiveTimeout: Duration(seconds: _appConfig.secondsTimeout),
       );
     }
 
@@ -137,12 +137,16 @@ extension ResponseExtension on Response {
       if (data["errors"] != null) {
         inspect(data);
         Map<dynamic, dynamic> errors = data["errors"];
-        if (errors.values.isEmpty || errors.values.toList()[0] == null || (errors.values.toList()[0] as List).isEmpty) {
+        if (errors.values.isEmpty ||
+            errors.values.toList()[0] == null ||
+            (errors.values.toList()[0] as List).isEmpty) {
           errorText = defaultErr;
         } else if (errors.values.toList()[0][0] is String) {
           errorText = errors.values.toList()[0][0];
         }
-      } else if (data["message"] != null && data["message"] is String && data["message"] != "") {
+      } else if (data["message"] != null &&
+          data["message"] is String &&
+          data["message"] != "") {
         errorText = (data["code"] ?? "").toString() + data["message"];
       } else {
         errorText = defaultErr;
